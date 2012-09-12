@@ -11,7 +11,7 @@ namespace LogMeIn.Models
     public class UsersContext : DbContext
     {
         public UsersContext()
-            : base("DefaultConnection")
+            : base("name=DefaultConnection")
         {
         }
 
