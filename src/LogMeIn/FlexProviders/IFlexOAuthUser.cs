@@ -1,11 +1,16 @@
 ﻿using System.Collections.Generic;
+using Microsoft.Web.WebPages.OAuth;
 
 namespace FlexProviders
 {
     public interface IFlexOAuthUser
     {
         string Username { get; set; }
-        bool IsLocal { get; set; }
-        IEnumerable<object> OAuthAccounts { get; set; } 
+        string Provider { get; set; }
+        string ProviderUsername { get; set; }
+        IEnumerable<OAuthAccount> OAuthAccounts { get; set; } 
+
+        // todo: figure out how to get rid of this one
+        bool IsLocal { get; set; }        
     }
 }
