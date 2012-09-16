@@ -61,6 +61,7 @@
     <Compile Include="IApplicationEnvironment.cs" />
     <Compile Include="IFlexMembershipProvider.cs" />
     <Compile Include="IFlexMembershipUser.cs" />
+    <Compile Include="IFlexOAuthProvider.cs" />
     <Compile Include="IFlexOAuthUser.cs" />
     <Compile Include="IFlexOAuthUserRepository.cs" />
     <Compile Include="ISecurityEncoder.cs" />

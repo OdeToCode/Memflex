@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Web.Security;
 using DotNetOpenAuth.AspNet;
@@ -9,24 +8,27 @@ using Microsoft.Web.WebPages.OAuth;
 namespace FlexProviders
 {
     public class FlexMemebershipProvider : IFlexMembershipProvider, 
+                                           IFlexOAuthProvider,
                                            IOpenAuthDataProvider 
     {
-        private readonly IFlexUserRepository _userRepository;
+        private readonly IFlexUserRepository _userUserRepository;
         private readonly IFlexOAuthUserRepository _oAuthUserRepository;
         private readonly IApplicationEnvironment _applicationEnvironment;
         private readonly ISecurityEncoder _encoder = new DefaultSecurityEncoder();
 
         public FlexMemebershipProvider(
-            IFlexUserRepository repository, 
-            IFlexOAuthUserRepository oAuthUserRepository)            
+            IFlexUserRepository userRepository, 
+            IFlexOAuthUserRepository oAuthUserRepository,
+            IApplicationEnvironment applicationEnvironment)            
         {         
-            _userRepository = repository;
+            _userUserRepository = userRepository;
             _oAuthUserRepository = oAuthUserRepository;
+            _applicationEnvironment = applicationEnvironment;
         }
 
         public bool Login(string username, string password)
         {
-            var user = _userRepository.GetUserByUsername(username);
+            var user = _userUserRepository.GetUserByUsername(username);
             var encodedPassword = _encoder.Encode(password, user.Salt);
             var flag = encodedPassword.Equals(user.Password);
             if(flag)
@@ -44,7 +46,7 @@ namespace FlexProviders
 
         public void CreateAccount(IFlexMembershipUser user)
         {
-            var existingUser = _userRepository.GetUserByUsername(user.Username);
+            var existingUser = _userUserRepository.GetUserByUsername(user.Username);
             if(existingUser != null)
             {
                 throw new MembershipCreateUserException("Cannot register with a duplicate username");
@@ -53,12 +55,12 @@ namespace FlexProviders
             user.Salt = user.Salt ?? _encoder.GenerateSalt();
             user.Password = _encoder.Encode(user.Password, user.Salt);
             user.IsLocal = true;
-            _userRepository.Add(user);         
+            _userUserRepository.Add(user);         
         }
 
         public bool HasLocalAccount(string userName)
         {
-            var user = _userRepository.GetUserByUsername(userName);
+            var user = _userUserRepository.GetUserByUsername(userName);
             return user.IsLocal;
         }
 
@@ -86,13 +88,13 @@ namespace FlexProviders
 
         public bool ChangePassword(string username, string oldPassword, string newPassword)
         {
-            var user = _userRepository.GetUserByUsername(username);
+            var user = _userUserRepository.GetUserByUsername(username);
             var encodedPassword = _encoder.Encode(oldPassword, user.Salt);
             var flag = encodedPassword.Equals(user.Password);
             if(flag)
             {
                 user.Password = _encoder.Encode(newPassword, user.Salt);
-                _userRepository.Save(user);
+                _userUserRepository.Save(user);
             }
             return false;
         }
@@ -104,17 +106,7 @@ namespace FlexProviders
 
         public string SerializeProviderUserId(string providerName, string providerUserId)
         {
-            using (MemoryStream ms = new MemoryStream())
-            using (BinaryWriter bw = new BinaryWriter(ms))
-            {
-                bw.Write(providerName);
-                bw.Write(providerUserId);
-                bw.Flush();
-                var serializedWithPadding = new byte[ms.Length + _padding.Length];
-                Buffer.BlockCopy(_padding, 0, serializedWithPadding, 0, _padding.Length);
-                Buffer.BlockCopy(ms.GetBuffer(), 0, serializedWithPadding, _padding.Length, (int) ms.Length);
-                return MachineKey.Encode(serializedWithPadding, MachineKeyProtection.All);
-            }
+            return _encoder.SerializeOAuthProviderUserId(providerName, providerUserId);
         }
 
         public AuthenticationClientData GetOAuthClientData(string providerName)
@@ -131,52 +123,7 @@ namespace FlexProviders
 
         public bool TryDeserializeProviderUserId(string protectedData, out string providerName, out string providerUserId)
         {
-            providerName = null;
-            providerUserId = null;
-            if (String.IsNullOrEmpty(protectedData))
-            {
-                return false;
-            }
-
-            var decodedWithPadding = MachineKey.Decode(protectedData, MachineKeyProtection.All);
-
-            if (decodedWithPadding.Length < _padding.Length)
-            {
-                return false;
-            }
-
-            // timing attacks aren't really applicable to this, so we just do the simple check.
-            for (var i = 0; i < _padding.Length; i++)
-            {
-                if (_padding[i] != decodedWithPadding[i])
-                {
-                    return false;
-                }
-            }
-
-            using (var ms = new MemoryStream(decodedWithPadding, _padding.Length, decodedWithPadding.Length - _padding.Length))
-            using (var br = new BinaryReader(ms))
-            {
-                try
-                {
-                    // use temp variable to keep both out parameters consistent and only set them when the input stream is read completely
-                    var name = br.ReadString();
-                    var userId = br.ReadString();
-                    // make sure that we consume the entire input stream
-                    if (ms.ReadByte() == -1)
-                    {
-                        providerName = name;
-                        providerUserId = userId;
-                        return true;
-                    }
-                }
-                catch
-                {
-                    // Any exceptions will result in this method returning false.
-                }
-            }
-            return false;
-
+            return _encoder.TryDeserializeOAuthProviderUserID(protectedData, out providerName, out providerUserId);
         }
 
         public ICollection<AuthenticationClientData> RegisteredClientData 
@@ -206,9 +153,7 @@ namespace FlexProviders
             var client = _authenticationClients[providerName];
             return _applicationEnvironment.VerifyAuthentication(client.AuthenticationClient,this, returnUrl);
         }
-
-        private static byte[] _padding = new byte[] { 0x85, 0xC5, 0x65, 0x72 };
-
+        
         private static readonly Dictionary<string, AuthenticationClientData> _authenticationClients =
             new Dictionary<string, AuthenticationClientData>(StringComparer.OrdinalIgnoreCase);        
     }

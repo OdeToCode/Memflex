@@ -2,7 +2,7 @@
 
 namespace FlexProviders
 {
-    interface IApplicationEnvironment
+    public interface IApplicationEnvironment
     {
         void IssueAuthTicket(string username, bool persist);
         void RevokeAuthTicket();
