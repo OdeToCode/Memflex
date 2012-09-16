@@ -1,4 +1,4 @@
-﻿namespace LogMeIn
+namespace LogMeIn.Security
 {
     // TODO: what parameters are needed?
     public interface IUserProfileManager

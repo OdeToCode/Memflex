@@ -107,6 +107,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FlexProviders\FlexProviders.csproj">
+      <Project>{9C987907-BD64-4100-89D4-F4BCFB77768B}</Project>
+      <Name>FlexProviders</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LogMeIn\LogMeIn.csproj">
       <Project>{F32C3978-5D6F-4B9D-9B39-A5E3F03BCFE6}</Project>
       <Name>LogMeIn</Name>

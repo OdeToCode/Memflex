@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using System.Web.Security;
 using DotNetOpenAuth.AspNet;
 using LogMeIn.Models;
+using LogMeIn.Security;
 using Microsoft.Web.WebPages.OAuth;
 
 namespace LogMeIn.Controllers

@@ -1,7 +1,7 @@
 using System.Linq;
 using LogMeIn.Models;
 
-namespace LogMeIn
+namespace LogMeIn.Security
 {
     class UserProfileManager : IUserProfileManager
     {
