@@ -54,9 +54,11 @@
     <Reference Include="WebMatrix.WebData, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Aspnet\AspnetEnvironment.cs" />
     <Compile Include="EF\EfUser.cs" />
     <Compile Include="EF\EfUserRepository.cs" />
     <Compile Include="FlexMemebershipProvider.cs" />
+    <Compile Include="IApplicationEnvironment.cs" />
     <Compile Include="IFlexMembershipProvider.cs" />
     <Compile Include="IFlexMembershipUser.cs" />
     <Compile Include="IFlexOAuthUser.cs" />

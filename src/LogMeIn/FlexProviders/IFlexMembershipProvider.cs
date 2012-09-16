@@ -4,11 +4,11 @@ using Microsoft.Web.WebPages.OAuth;
 
 namespace FlexProviders
 {
+    // TODO: simplify
     public interface IFlexMembershipProvider
-    {
-        // TODO: simplify
-
-        bool VerifyPassword(string username, string password);        
+    {        
+        bool Login(string username, string password);
+        void Logout();
         void CreateAccount(IFlexMembershipUser user);
         bool HasLocalAccount(string username);
         string GetUserName(string provider, string providerUserId);        

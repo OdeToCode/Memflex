@@ -8,10 +8,12 @@ using Microsoft.Web.WebPages.OAuth;
 
 namespace FlexProviders
 {
-    public class FlexMemebershipProvider : IFlexMembershipProvider
+    public class FlexMemebershipProvider : IFlexMembershipProvider, 
+                                           IOpenAuthDataProvider 
     {
         private readonly IFlexUserRepository _userRepository;
         private readonly IFlexOAuthUserRepository _oAuthUserRepository;
+        private readonly IApplicationEnvironment _applicationEnvironment;
         private readonly ISecurityEncoder _encoder = new DefaultSecurityEncoder();
 
         public FlexMemebershipProvider(
@@ -22,11 +24,22 @@ namespace FlexProviders
             _oAuthUserRepository = oAuthUserRepository;
         }
 
-        public bool VerifyPassword(string username, string password)
+        public bool Login(string username, string password)
         {
             var user = _userRepository.GetUserByUsername(username);
             var encodedPassword = _encoder.Encode(password, user.Salt);
-            return encodedPassword.Equals(user.Password);
+            var flag = encodedPassword.Equals(user.Password);
+            if(flag)
+            {
+                _applicationEnvironment.IssueAuthTicket(username, true);
+                return true;
+            }
+            return false;
+        }
+
+        public void Logout()
+        {
+            _applicationEnvironment.RevokeAuthTicket();
         }
 
         public void CreateAccount(IFlexMembershipUser user)
@@ -47,6 +60,11 @@ namespace FlexProviders
         {
             var user = _userRepository.GetUserByUsername(userName);
             return user.IsLocal;
+        }
+
+        public string GetUserNameFromOpenAuth(string openAuthProvider, string openAuthId)
+        {
+            return GetUserName(openAuthProvider, openAuthId);
         }
 
         public string GetUserName(string provider, string providerUserId)
@@ -173,17 +191,25 @@ namespace FlexProviders
 
         public void RequestAuthentication(string provider, string returnUrl)
         {
-            throw new NotImplementedException();
+            var client = _authenticationClients[provider];
+            _applicationEnvironment.RequestAuthentication(client.AuthenticationClient, this, returnUrl);
         }
 
-        public AuthenticationResult VerifyAuthentication(string action)
+        public AuthenticationResult VerifyAuthentication(string returnUrl)
         {
-            throw new NotImplementedException();
+            var providerName = _applicationEnvironment.GetOAuthPoviderName();
+            if (String.IsNullOrEmpty(providerName))
+            {
+                return AuthenticationResult.Failed;
+            }
+
+            var client = _authenticationClients[providerName];
+            return _applicationEnvironment.VerifyAuthentication(client.AuthenticationClient,this, returnUrl);
         }
 
         private static byte[] _padding = new byte[] { 0x85, 0xC5, 0x65, 0x72 };
 
         private static readonly Dictionary<string, AuthenticationClientData> _authenticationClients =
-            new Dictionary<string, AuthenticationClientData>(StringComparer.OrdinalIgnoreCase);
+            new Dictionary<string, AuthenticationClientData>(StringComparer.OrdinalIgnoreCase);        
     }
 }
