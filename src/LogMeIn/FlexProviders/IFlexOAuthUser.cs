@@ -7,9 +7,8 @@ namespace FlexProviders
     {
         string Username { get; set; }
         string Provider { get; set; }
-        string ProviderUsername { get; set; }
-        IEnumerable<OAuthAccount> OAuthAccounts { get; set; } 
-
+        string ProviderUsername { get; set; }        
+        
         // todo: figure out how to get rid of this one
         bool IsLocal { get; set; }        
     }

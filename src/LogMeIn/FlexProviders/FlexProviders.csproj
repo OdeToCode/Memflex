@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Aspnet\AspnetEnvironment.cs" />
+    <Compile Include="EF\EfOAuthAccount.cs" />
     <Compile Include="EF\EfUser.cs" />
     <Compile Include="EF\EfUserRepository.cs" />
     <Compile Include="FlexMemebershipProvider.cs" />
@@ -70,6 +71,10 @@
     <Compile Include="Migrations\201209161700279_Initial.Designer.cs">
       <DependentUpon>201209161700279_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201209162102141_OAuthAccounts.cs" />
+    <Compile Include="Migrations\201209162102141_OAuthAccounts.Designer.cs">
+      <DependentUpon>201209162102141_OAuthAccounts.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -80,6 +85,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201209161700279_Initial.resx">
       <DependentUpon>201209161700279_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201209162102141_OAuthAccounts.resx">
+      <DependentUpon>201209162102141_OAuthAccounts.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,10 +1,13 @@
-﻿namespace FlexProviders
+﻿using System.Collections.Generic;
+using Microsoft.Web.WebPages.OAuth;
+
+namespace FlexProviders
 {
     public interface IFlexOAuthUserRepository
     {
-        IFlexOAuthUser GetUserByOAuthProvider(string provider, string providerUserId);
-        IFlexOAuthUser DeleteOAuthAccount(string provider, string providerUserId);
-        IFlexOAuthUser GetUserByUsername(string ownerAccount);
-        IFlexOAuthUser CreateOrUpdate(string provider, string providerUserId, string username);
+        bool DeleteOAuthAccount(string provider, string providerUserId);        
+        IFlexOAuthUser GetUserByOAuthProvider(string provider, string providerUserId);        
+        IFlexOAuthUser CreateOAuthAccount(string provider, string providerUserId, string username);
+        IEnumerable<OAuthAccount> GetOAuthAccountsForUser(string username);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data.Entity;
-using System.IO;
 using System.Linq;
 using FlexProviders.EF;
 
@@ -23,12 +22,23 @@ namespace FlexProviders.Tests.Integration
         {
             Database.Delete("Default");
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<EfUserRepository, Migrations.Configuration>("Default"));            
-            new DefaultUserRepository().Users.ToList();
+            var forcedResultToCreateDatabaseHere = new DefaultUserRepository().Users.ToList();            
         }
 
         public bool CanFindUsername(string username)
         {
-            return _db.Value.EfUsers.FindByUsername(username) != null;
+            return _db.EfUsers.FindByUsername(username) != null;
+        }
+
+        public string GetPassword(string username)
+        {
+            return _db.EfUsers.FindByUsername(username).Password;
+        }
+
+        public int GetCountOfOAuthAccounts(string username)
+        {
+            var userId = _db.EfUsers.FindByUsername(username).Id;
+            return _db.EfOAuthAccounts.FindAll(_db.EfOAuthAccounts.Ef_UserId == userId).Count();
         }
 
         private readonly dynamic _db;

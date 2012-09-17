@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Security;
 using DotNetOpenAuth.AspNet;
+using FlexProviders;
+using FlexProviders.Aspnet;
+using FlexProviders.EF;
 using LogMeIn.Models;
-using LogMeIn.Security;
 using Microsoft.Web.WebPages.OAuth;
 
 namespace LogMeIn.Controllers
@@ -12,21 +14,23 @@ namespace LogMeIn.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        private readonly IWebSecurity _webSecurity;
-        private readonly IUserProfileManager _userProfileManager;
-
+        private readonly IFlexMembershipProvider _membershipProvider;
+        private readonly IFlexOAuthProvider _oAuthProvider;
+        private readonly ISecurityEncoder _encoder = new DefaultSecurityEncoder();
+        
         public AccountController()
         {
-            _webSecurity = new WebMatrixSecurity();
-            _userProfileManager = new UserProfileManager();
+            var repository = new EfUserRepository();
+            var environment = new AspnetEnvironment();
+            var provider  = new FlexMemebershipProvider(repository,repository, environment);
+            _oAuthProvider = provider;
+            _membershipProvider = provider;
         }
 
-        public AccountController(IWebSecurity webSecurity, IUserProfileManager userProfileManager)
+        public AccountController(IFlexMembershipProvider provider)
         {
-            _webSecurity = webSecurity;
-            _userProfileManager = userProfileManager;
+            _membershipProvider = provider;
         }
-
 
         //
         // GET: /Account/Login
@@ -46,12 +50,12 @@ namespace LogMeIn.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginModel model, string returnUrl)
         {
-            if (ModelState.IsValid && _webSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))
+            // todo: remember me flag
+            if (ModelState.IsValid && _membershipProvider.Login(model.UserName, model.Password))
             {
                 return RedirectToLocal(returnUrl);
             }
-
-            // If we got this far, something failed, redisplay form
+            
             ModelState.AddModelError("", "The user name or password provided is incorrect.");
             return View(model);
         }
@@ -63,7 +67,7 @@ namespace LogMeIn.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
-            _webSecurity.Logout();
+            _membershipProvider.Logout();
             return RedirectToAction("Index", "Home");
         }
 
@@ -89,7 +93,8 @@ namespace LogMeIn.Controllers
                 // Attempt to register the user
                 try
                 {
-                    _webSecurity.Register(model.UserName, model.Password);
+                    var user = new EfUser {Username = model.UserName, Password = model.Password};
+                    _membershipProvider.CreateAccount(user);
                     return RedirectToAction("Index", "Home");
                 }
                 catch (MembershipCreateUserException e)
@@ -109,16 +114,8 @@ namespace LogMeIn.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Disassociate(string provider, string providerUserId)
         {
-            string ownerAccount = _webSecurity.GetUserName(provider, providerUserId);
-            ManageMessageId? message = null;
-
-            // Only disassociate the account if the currently logged in user is the owner
-            if (ownerAccount == User.Identity.Name)
-            {
-                message = _webSecurity.Dissassociate(ownerAccount, provider, providerUserId);
-            }
-
-            return RedirectToAction("Manage", new { Message = message });
+            _oAuthProvider.DissassociateOAuthAccount(provider, providerUserId);
+            return RedirectToAction("Manage", new { Message = "Complete" });
         }
 
         //
@@ -131,7 +128,7 @@ namespace LogMeIn.Controllers
                 : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
                 : message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
                 : "";
-            ViewBag.HasLocalPassword = _webSecurity.HasLocalAccount(User.Identity.Name);
+            ViewBag.HasLocalPassword = _membershipProvider.HasLocalAccount(User.Identity.Name);
             ViewBag.ReturnUrl = Url.Action("Manage");
             return View();
         }
@@ -143,7 +140,7 @@ namespace LogMeIn.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Manage(LocalPasswordModel model)
         {
-            bool hasLocalAccount = _webSecurity.HasLocalAccount(User.Identity.Name);
+            bool hasLocalAccount = _membershipProvider.HasLocalAccount(User.Identity.Name);
             ViewBag.HasLocalPassword = hasLocalAccount;
             ViewBag.ReturnUrl = Url.Action("Manage");
             if (hasLocalAccount)
@@ -154,7 +151,7 @@ namespace LogMeIn.Controllers
                     bool changePasswordSucceeded;
                     try
                     {
-                        changePasswordSucceeded = _webSecurity.ChangePassword(User.Identity.Name, model.OldPassword, model.NewPassword);
+                        changePasswordSucceeded = _membershipProvider.ChangePassword(User.Identity.Name, model.OldPassword, model.NewPassword);
                     }
                     catch (Exception)
                     {
@@ -185,7 +182,8 @@ namespace LogMeIn.Controllers
                 {
                     try
                     {
-                        _webSecurity.CreateAccount(User.Identity.Name, model.NewPassword);
+                        var user = new EfUser() {Username = User.Identity.Name, Password = model.NewPassword};
+                        _membershipProvider.CreateAccount(user);                        
                         return RedirectToAction("Manage", new { Message = ManageMessageId.SetPasswordSuccess });
                     }
                     catch (Exception e)
@@ -207,7 +205,7 @@ namespace LogMeIn.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ExternalLogin(string provider, string returnUrl)
         {
-            return new ExternalLoginResult(_webSecurity, provider, Url.Action("ExternalLoginCallback", new { ReturnUrl = returnUrl }));
+            return new ExternalLoginResult(_oAuthProvider, provider, Url.Action("ExternalLoginCallback", new { ReturnUrl = returnUrl }));
         }
 
         //
@@ -216,28 +214,30 @@ namespace LogMeIn.Controllers
         [AllowAnonymous]
         public ActionResult ExternalLoginCallback(string returnUrl)
         {
-            AuthenticationResult result = _webSecurity.VerifyAuthentication(Url.Action("ExternalLoginCallback", new { ReturnUrl = returnUrl }));
+            AuthenticationResult result = _oAuthProvider.VerifyOAuthAuthentication(Url.Action("ExternalLoginCallback", new { ReturnUrl = returnUrl }));
             if (!result.IsSuccessful)
             {
                 return RedirectToAction("ExternalLoginFailure");
             }
 
-            if (_webSecurity.Login(result.Provider, result.ProviderUserId, persistCookie: false))
-            {
-                return RedirectToLocal(returnUrl);
-            }
+            // todo: review
+            throw new NotImplementedException();
+            //if (_oAuthProvider.Login(result.Provider, result.ProviderUserId, persistCookie: false))
+            //{
+            //    return RedirectToLocal(returnUrl);
+            //}
 
             if (User.Identity.IsAuthenticated)
             {
                 // If the current user is logged in add the new account
-                _webSecurity.CreateOrUpdateAccount(result.Provider, result.ProviderUserId, User.Identity.Name);
+                _oAuthProvider.CreateOAuthAccount(result.Provider, result.ProviderUserId, User.Identity.Name);
                 return RedirectToLocal(returnUrl);
             }
             else
             {
                 // User is new, ask for their desired membership name
-                string loginData = _webSecurity.SerializeProviderUserId(result.Provider, result.ProviderUserId);
-                ViewBag.ProviderDisplayName = _webSecurity.GetOAuthClientData(result.Provider).DisplayName;
+                string loginData = _encoder.SerializeOAuthProviderUserId(result.Provider, result.ProviderUserId);
+                ViewBag.ProviderDisplayName = _oAuthProvider.GetOAuthClientData(result.Provider).DisplayName;
                 ViewBag.ReturnUrl = returnUrl;
                 return View("ExternalLoginConfirmation", new RegisterExternalLoginModel { UserName = result.UserName, ExternalLoginData = loginData });
             }
@@ -254,28 +254,30 @@ namespace LogMeIn.Controllers
             string provider = null;
             string providerUserId = null;
 
-            if (User.Identity.IsAuthenticated || !_webSecurity.TryDeserializeProviderUserId(model.ExternalLoginData, out provider, out providerUserId))
+            if (User.Identity.IsAuthenticated || !_encoder.TryDeserializeOAuthProviderUserID(model.ExternalLoginData, out provider, out providerUserId))
             {
                 return RedirectToAction("Manage");
             }
 
             if (ModelState.IsValid)
             {
-                if (!_userProfileManager.Exists(model.UserName))
-                {
-                    _userProfileManager.Add(model.UserName);
-                    _webSecurity.CreateOrUpdateAccount(provider, providerUserId, model.UserName);
-                    _webSecurity.Login(provider, providerUserId, persistCookie: false);
 
-                    return RedirectToLocal(returnUrl);
-                }
-                else
-                {
-                    ModelState.AddModelError("UserName", "User name already exists. Please enter a different user name.");
-                }
+                // TODO: review
+                //if (!_userProfileManager.Exists(model.UserName))
+                //{
+                //    _userProfileManager.Add(model.UserName);
+                //    _webSecurity.CreateOrUpdateAccount(provider, providerUserId, model.UserName);
+                //    _webSecurity.Login(provider, providerUserId, persistCookie: false);
+
+                //    return RedirectToLocal(returnUrl);
+                //}
+                //else
+                //{
+                //    ModelState.AddModelError("UserName", "User name already exists. Please enter a different user name.");
+                //}
             }
 
-            ViewBag.ProviderDisplayName = _webSecurity.GetOAuthClientData(provider).DisplayName;
+            ViewBag.ProviderDisplayName = _oAuthProvider.GetOAuthClientData(provider).DisplayName;
             ViewBag.ReturnUrl = returnUrl;
             return View(model);
         }
@@ -294,17 +296,17 @@ namespace LogMeIn.Controllers
         public ActionResult ExternalLoginsList(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
-            return PartialView("_ExternalLoginsListPartial", _webSecurity.RegisteredClientData);
+            return PartialView("_ExternalLoginsListPartial", _oAuthProvider.RegisteredClientData);
         }
 
         [ChildActionOnly]
         public ActionResult RemoveExternalLogins()
         {
-            ICollection<OAuthAccount> accounts = _webSecurity.GetAccountsFromUserName(User.Identity.Name);
+            var accounts = _oAuthProvider.GetOAuthAccountsFromUserName(User.Identity.Name);
             List<ExternalLogin> externalLogins = new List<ExternalLogin>();
             foreach (OAuthAccount account in accounts)
             {
-                AuthenticationClientData clientData = _webSecurity.GetOAuthClientData(account.Provider);
+                AuthenticationClientData clientData = _oAuthProvider.GetOAuthClientData(account.Provider);
 
                 externalLogins.Add(new ExternalLogin
                 {
@@ -314,7 +316,7 @@ namespace LogMeIn.Controllers
                 });
             }
 
-            ViewBag.ShowRemoveButton = externalLogins.Count > 1 || _webSecurity.HasLocalAccount(User.Identity.Name);
+            ViewBag.ShowRemoveButton = externalLogins.Count > 1 || _membershipProvider.HasLocalAccount(User.Identity.Name);
             return PartialView("_RemoveExternalLoginsPartial", externalLogins);
         }
 
@@ -333,11 +335,11 @@ namespace LogMeIn.Controllers
 
         internal class ExternalLoginResult : ActionResult
         {
-            private IWebSecurity _webSecurity;
+            private IFlexOAuthProvider _oAuthProvider;
 
-            public ExternalLoginResult(IWebSecurity webSecurity, string provider, string returnUrl)
+            public ExternalLoginResult(IFlexOAuthProvider oAuthProvider, string provider, string returnUrl)
             {
-                _webSecurity = webSecurity;
+                _oAuthProvider = oAuthProvider;
                 Provider = provider;
                 ReturnUrl = returnUrl;
             }
@@ -347,7 +349,7 @@ namespace LogMeIn.Controllers
 
             public override void ExecuteResult(ControllerContext context)
             {
-                _webSecurity.RequestAuthentication(Provider, ReturnUrl);
+                _oAuthProvider.RequestOAuthAuthentication(Provider, ReturnUrl);
             }
         }
 
