@@ -1,8 +1,7 @@
-﻿using FlexProviders.EF;
 using Xunit;
 using Xunit.Extensions;
 
-namespace FlexProviders.Tests.Integration.OAuth
+namespace LogMeIn.Tests.Integration.OAuth
 {
     public class CreateUpdateAccountTests : IntegrationTest
     {

@@ -55,40 +55,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Aspnet\AspnetEnvironment.cs" />
-    <Compile Include="EF\EfOAuthAccount.cs" />
-    <Compile Include="EF\EfUser.cs" />
-    <Compile Include="EF\EfUserRepository.cs" />
+    <Compile Include="EF\FlexMembershipUserRepository.cs" />
     <Compile Include="FlexMemebershipProvider.cs" />
     <Compile Include="IApplicationEnvironment.cs" />
     <Compile Include="IFlexMembershipProvider.cs" />
     <Compile Include="IFlexMembershipUser.cs" />
+    <Compile Include="FlexOAuthAccount.cs" />
     <Compile Include="IFlexOAuthProvider.cs" />
-    <Compile Include="IFlexOAuthUser.cs" />
     <Compile Include="IFlexOAuthUserRepository.cs" />
     <Compile Include="ISecurityEncoder.cs" />
     <Compile Include="IFlexUserRepository.cs" />
-    <Compile Include="Migrations\201209161700279_Initial.cs" />
-    <Compile Include="Migrations\201209161700279_Initial.Designer.cs">
-      <DependentUpon>201209161700279_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201209162102141_OAuthAccounts.cs" />
-    <Compile Include="Migrations\201209162102141_OAuthAccounts.Designer.cs">
-      <DependentUpon>201209162102141_OAuthAccounts.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201209161700279_Initial.resx">
-      <DependentUpon>201209161700279_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201209162102141_OAuthAccounts.resx">
-      <DependentUpon>201209162102141_OAuthAccounts.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

@@ -1,6 +1,8 @@
-﻿using DotNetOpenAuth.AspNet;
+using System.Web;
+using DotNetOpenAuth.AspNet;
+using FlexProviders;
 
-namespace FlexProviders.Tests.Integration
+namespace LogMeIn.Tests.Integration
 {
     public class FakeApplicationEnvironment : IApplicationEnvironment
     {
@@ -28,5 +30,15 @@ namespace FlexProviders.Tests.Integration
         {
             return new AuthenticationResult(true);
         }
-    }
+
+        public HttpContextBase AcquireContext()
+        {
+            return new FakeHttpContext();
+        }
+        
+        public class FakeHttpContext : HttpContextBase
+        {
+
+        }
+    }    
 }

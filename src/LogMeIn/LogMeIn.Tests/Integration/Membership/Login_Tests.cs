@@ -1,8 +1,8 @@
-﻿using FlexProviders.EF;
+using LogMeIn.Models;
 using Xunit;
 using Xunit.Extensions;
 
-namespace FlexProviders.Tests.Integration.Membership
+namespace LogMeIn.Tests.Integration.Membership
 {
     public class Login_Tests : IntegrationTest
     {
@@ -12,7 +12,7 @@ namespace FlexProviders.Tests.Integration.Membership
         {
             var username = "sallen";
             var password = "12345678";
-            var user = new EfUser {Username = username, Password = password};
+            var user = new User {Username = username, Password = password};
             _provider.CreateAccount(user);
 
             bool result = _provider.Login(username, password);
@@ -26,7 +26,7 @@ namespace FlexProviders.Tests.Integration.Membership
         {
             var username = "sallen";
             var password = "12345678";
-            var user = new EfUser { Username = username, Password = password };
+            var user = new User { Username = username, Password = password };
             _provider.CreateAccount(user);
 
             bool result = _provider.Login(username, "foo");

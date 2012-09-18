@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Http;
+﻿using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using LogMeIn.App_Start;
 
 namespace LogMeIn
 {
@@ -16,8 +11,7 @@ namespace LogMeIn
     public class MvcApplication : System.Web.HttpApplication
     {
         protected void Application_Start()
-        {
-            MembershipConfig.Initialize();
+        {            
             AreaRegistration.RegisterAllAreas();            
             WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);

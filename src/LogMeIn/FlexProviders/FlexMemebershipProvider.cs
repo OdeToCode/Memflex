@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web.Security;
 using DotNetOpenAuth.AspNet;
 using Microsoft.Web.WebPages.OAuth;
@@ -31,7 +30,7 @@ namespace FlexProviders
             var user = _userRepository.GetUserByUsername(username);
             var encodedPassword = _encoder.Encode(password, user.Salt);
             var flag = encodedPassword.Equals(user.Password);
-            if(flag)
+            if (flag)
             {
                 _applicationEnvironment.IssueAuthTicket(username, true);
                 return true;
@@ -47,7 +46,7 @@ namespace FlexProviders
         public void CreateAccount(IFlexMembershipUser user)
         {
             var existingUser = _userRepository.GetUserByUsername(user.Username);
-            if(existingUser != null)
+            if (existingUser != null)
             {
                 throw new MembershipCreateUserException("Cannot register with a duplicate username");
             }
@@ -55,7 +54,7 @@ namespace FlexProviders
             user.Salt = user.Salt ?? _encoder.GenerateSalt();
             user.Password = _encoder.Encode(user.Password, user.Salt);
             user.IsLocal = true;
-            _userRepository.Add(user);         
+            _userRepository.Add(user);
         }
 
         public bool HasLocalAccount(string userName)
@@ -69,7 +68,7 @@ namespace FlexProviders
             var user = _userRepository.GetUserByUsername(username);
             var encodedPassword = _encoder.Encode(oldPassword, user.Salt);
             var flag = encodedPassword.Equals(user.Password);
-            if(flag)
+            if (flag)
             {
                 user.Password = _encoder.Encode(newPassword, user.Salt);
                 _userRepository.Save(user);
@@ -90,29 +89,29 @@ namespace FlexProviders
 
         public bool DissassociateOAuthAccount(string provider, string providerUserId)
         {
-            return _oAuthUserRepository.DeleteOAuthAccount(provider, providerUserId);            
+            return _oAuthUserRepository.DeleteOAuthAccount(provider, providerUserId);
         }
 
         public AuthenticationClientData GetOAuthClientData(string providerName)
-        {            
+        {
             return _authenticationClients[providerName];
         }
 
-        public void RegisterClient(IAuthenticationClient client, 
+        public void RegisterClient(IAuthenticationClient client,
             string displayName, IDictionary<string, object> extraData)
         {
             var clientData = new AuthenticationClientData(client, displayName, extraData);
             _authenticationClients.Add(client.ProviderName, clientData);
         }
 
-        public ICollection<AuthenticationClientData> RegisteredClientData 
-        { 
+        public ICollection<AuthenticationClientData> RegisteredClientData
+        {
             get { return _authenticationClients.Values; }
         }
 
         public IEnumerable<OAuthAccount> GetOAuthAccountsFromUserName(string username)
         {
-            return _oAuthUserRepository.GetOAuthAccountsForUser(username);            
+            return _oAuthUserRepository.GetOAuthAccountsForUser(username);
         }
 
         public void RequestOAuthAuthentication(string provider, string returnUrl)
@@ -130,9 +129,17 @@ namespace FlexProviders
             }
 
             var client = _authenticationClients[providerName];
-            return _applicationEnvironment.VerifyAuthentication(client.AuthenticationClient,this, returnUrl);
+            return _applicationEnvironment.VerifyAuthentication(client.AuthenticationClient, this, returnUrl);
         }
-        
+
+        public bool OAuthLogin(string provider, string providerUserId, bool persistCookie)
+        {
+            var oauthProvider = _authenticationClients[provider];
+            var context = _applicationEnvironment.AcquireContext();
+            var securityManager = new OpenAuthSecurityManager(context, oauthProvider.AuthenticationClient, this);
+            return securityManager.Login(providerUserId, persistCookie);
+        }
+
         private static readonly Dictionary<string, AuthenticationClientData> _authenticationClients =
             new Dictionary<string, AuthenticationClientData>(StringComparer.OrdinalIgnoreCase);        
     }

@@ -1,9 +1,11 @@
-﻿using System;
+using System;
 using System.Data.Entity;
 using System.Linq;
 using FlexProviders.EF;
+using LogMeIn.Migrations;
+using LogMeIn.Models;
 
-namespace FlexProviders.Tests.Integration
+namespace LogMeIn.Tests.Integration
 {
     public class TestDb 
     {
@@ -21,24 +23,24 @@ namespace FlexProviders.Tests.Integration
         private static void UseEntityFrameworkToCreateDatabase()
         {
             Database.Delete("Default");
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<EfUserRepository, Migrations.Configuration>("Default"));            
-            var forcedResultToCreateDatabaseHere = new DefaultUserRepository().Users.ToList();            
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<MovieDb, Configuration>("Default"));            
+            var forcedResultToCreateDatabaseHere = new MovieDb("name=Default").Users.ToList();            
         }
 
         public bool CanFindUsername(string username)
         {
-            return _db.EfUsers.FindByUsername(username) != null;
+            return _db.Users.FindByUsername(username) != null;
         }
 
         public string GetPassword(string username)
         {
-            return _db.EfUsers.FindByUsername(username).Password;
+            return _db.Users.FindByUsername(username).Password;
         }
 
         public int GetCountOfOAuthAccounts(string username)
         {
-            var userId = _db.EfUsers.FindByUsername(username).Id;
-            return _db.EfOAuthAccounts.FindAll(_db.EfOAuthAccounts.Ef_UserId == userId).Count();
+            var userId = _db.Users.FindByUsername(username).Id;
+            return _db.FlexOAuthAccounts.FindAll(_db.FlexOAuthAccounts.User_Id == userId).Count();
         }
 
         private readonly dynamic _db;

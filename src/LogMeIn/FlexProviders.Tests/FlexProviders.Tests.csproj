@@ -81,6 +81,7 @@
       <Private>True</Private>
       <HintPath>..\packages\EntityFramework.SqlServerCompact.4.3.4\lib\net40\System.Data.SqlServerCe.Entity.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -97,16 +98,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Integration\DefaultRepository.cs" />
-    <Compile Include="Integration\FakeApplicationEnvironment.cs" />
-    <Compile Include="Integration\IntegrationTest.cs" />
-    <Compile Include="Integration\Membership\ChangePasswordTests.cs" />
-    <Compile Include="Integration\Membership\CreateAccountTests.cs" />
-    <Compile Include="Integration\Membership\Login_Tests.cs" />
-    <Compile Include="Integration\OAuth\CreateUpdateAccountTests.cs" />
-    <Compile Include="Integration\OAuth\DeleteAccountTests.cs" />
-    <Compile Include="Integration\OAuth\GetUserNameTests.cs" />
-    <Compile Include="Integration\TestDB.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\Encryption\EncryptorTests.cs" />
   </ItemGroup>

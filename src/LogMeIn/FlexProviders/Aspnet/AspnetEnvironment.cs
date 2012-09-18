@@ -1,6 +1,7 @@
 ﻿using System.Web;
 using System.Web.Security;
 using DotNetOpenAuth.AspNet;
+using Microsoft.Web.WebPages.OAuth;
 
 namespace FlexProviders.Aspnet
 {
@@ -14,6 +15,11 @@ namespace FlexProviders.Aspnet
         public void RevokeAuthTicket()
         {
             FormsAuthentication.SignOut();
+        }
+
+        public HttpContextBase AcquireContext()
+        {
+            return new HttpContextWrapper(HttpContext.Current);
         }
 
         public void RequestAuthentication(IAuthenticationClient client, IOpenAuthDataProvider provider, string returnUrl)

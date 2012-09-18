@@ -1,7 +1,7 @@
-﻿using Xunit;
+using Xunit;
 using Xunit.Extensions;
 
-namespace FlexProviders.Tests.Integration.OAuth
+namespace LogMeIn.Tests.Integration.OAuth
 {
     public class DeleteAccountTests : IntegrationTest
     {

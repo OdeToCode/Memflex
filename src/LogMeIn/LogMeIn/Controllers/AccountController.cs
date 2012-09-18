@@ -20,7 +20,7 @@ namespace LogMeIn.Controllers
         
         public AccountController()
         {
-            var repository = new EfUserRepository();
+            var repository = new FlexMembershipUserRepository<User,MovieDb>(new MovieDb());
             var environment = new AspnetEnvironment();
             var provider  = new FlexMemebershipProvider(repository,repository, environment);
             _oAuthProvider = provider;
@@ -93,7 +93,7 @@ namespace LogMeIn.Controllers
                 // Attempt to register the user
                 try
                 {
-                    var user = new EfUser {Username = model.UserName, Password = model.Password};
+                    var user = new User {Username = model.UserName, Password = model.Password};
                     _membershipProvider.CreateAccount(user);
                     return RedirectToAction("Index", "Home");
                 }
@@ -182,7 +182,7 @@ namespace LogMeIn.Controllers
                 {
                     try
                     {
-                        var user = new EfUser() {Username = User.Identity.Name, Password = model.NewPassword};
+                        var user = new User() {Username = User.Identity.Name, Password = model.NewPassword};
                         _membershipProvider.CreateAccount(user);                        
                         return RedirectToAction("Manage", new { Message = ManageMessageId.SetPasswordSuccess });
                     }

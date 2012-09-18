@@ -164,7 +164,6 @@
     <Compile Include="App_Start\AuthConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
-    <Compile Include="App_Start\MembershipConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -173,6 +172,12 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201209180159144_InitialCreate.cs" />
+    <Compile Include="Migrations\201209180159144_InitialCreate.Designer.cs">
+      <DependentUpon>201209180159144_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Movies.cs" />
     <Compile Include="Security\IUserProfileManager.cs" />
     <Compile Include="Security\IWebSecurity.cs" />
     <Compile Include="Models\AccountModels.cs" />
@@ -180,6 +185,10 @@
     <Compile Include="Security\ManageMessageId.cs" />
     <Compile Include="Security\UserProfileManager.cs" />
     <Compile Include="Security\WebMatrixSecurity.cs" />
+    <Content Include="Views\Home\Details.cshtml" />
+    <Content Include="Views\Home\Create.cshtml" />
+    <Content Include="Views\Home\Edit.cshtml" />
+    <Content Include="Views\Home\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -305,6 +314,11 @@
       <Project>{9c987907-bd64-4100-89d4-f4bcfb77768b}</Project>
       <Name>FlexProviders</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201209180159144_InitialCreate.resx">
+      <DependentUpon>201209180159144_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

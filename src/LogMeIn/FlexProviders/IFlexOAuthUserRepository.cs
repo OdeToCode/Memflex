@@ -6,8 +6,8 @@ namespace FlexProviders
     public interface IFlexOAuthUserRepository
     {
         bool DeleteOAuthAccount(string provider, string providerUserId);        
-        IFlexOAuthUser GetUserByOAuthProvider(string provider, string providerUserId);        
-        IFlexOAuthUser CreateOAuthAccount(string provider, string providerUserId, string username);
+        IFlexMembershipUser GetUserByOAuthProvider(string provider, string providerUserId);        
+        IFlexMembershipUser CreateOAuthAccount(string provider, string providerUserId, string username);
         IEnumerable<OAuthAccount> GetOAuthAccountsForUser(string username);
     }
 }

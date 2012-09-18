@@ -8,25 +8,6 @@ using System.Web.Security;
 
 namespace LogMeIn.Models
 {
-    public class UsersContext : DbContext
-    {
-        public UsersContext()
-            : base("name=DefaultConnection")
-        {
-        }
-
-        public DbSet<UserProfile> UserProfiles { get; set; }
-    }
-
-    [Table("UserProfileManager")]
-    public class UserProfile
-    {
-        [Key]
-        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
-        public int UserId { get; set; }
-        public string UserName { get; set; }
-    }
-
     public class RegisterExternalLoginModel
     {
         [Required]

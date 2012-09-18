@@ -13,6 +13,6 @@ namespace FlexProviders
         IEnumerable<OAuthAccount> GetOAuthAccountsFromUserName(string username);
         void RequestOAuthAuthentication(string provider, string returnUrl);
         AuthenticationResult VerifyOAuthAuthentication(string action);
-        //bool Login(string provider, string providerUserId, bool persistCookie);
+        bool OAuthLogin(string provider, string providerUserId, bool persistCookie);
     }
 }

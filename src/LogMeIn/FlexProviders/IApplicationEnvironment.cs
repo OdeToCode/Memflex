@@ -1,4 +1,5 @@
-﻿using DotNetOpenAuth.AspNet;
+﻿using System.Web;
+using DotNetOpenAuth.AspNet;
 
 namespace FlexProviders
 {
@@ -8,6 +9,7 @@ namespace FlexProviders
         void RevokeAuthTicket();
         string GetOAuthPoviderName();
         void RequestAuthentication(IAuthenticationClient client, IOpenAuthDataProvider provider, string returnUrl);        
-        AuthenticationResult VerifyAuthentication(IAuthenticationClient client, IOpenAuthDataProvider provider, string returnUrl);        
+        AuthenticationResult VerifyAuthentication(IAuthenticationClient client, IOpenAuthDataProvider provider, string returnUrl);
+        HttpContextBase AcquireContext();
     }
 }

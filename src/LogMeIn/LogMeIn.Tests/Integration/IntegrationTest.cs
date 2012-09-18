@@ -1,12 +1,12 @@
-﻿using FlexProviders.EF;
+using FlexProviders;
 
-namespace FlexProviders.Tests.Integration
+namespace LogMeIn.Tests.Integration
 {
     public class IntegrationTest
     {
         protected readonly FlexMemebershipProvider _provider;
         protected readonly FakeApplicationEnvironment _environment;
-        protected readonly EfUserRepository _repository;
+        protected readonly DefaultUserRepository _repository;
         protected TestDb _db;
 
         public IntegrationTest()
