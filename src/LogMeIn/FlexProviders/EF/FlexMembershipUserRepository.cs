@@ -49,7 +49,11 @@ namespace FlexProviders.EF
                 users.Add(user);
             }
             var account = new FlexOAuthAccount() { Provider = provider, ProviderUserId = providerUserId };
-            user.OAuthAccounts = new Collection<FlexOAuthAccount> {account};
+            if(user.OAuthAccounts == null)
+            {
+                user.OAuthAccounts = new Collection<FlexOAuthAccount>();
+            }
+            user.OAuthAccounts.Add(account);
             _context.SaveChanges();
 
             return user;
