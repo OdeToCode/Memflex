@@ -3,9 +3,9 @@ using LogMeIn.Models;
 
 namespace LogMeIn.Tests.Integration
 {
-    public class DefaultUserRepository : FlexMembershipUserRepository<User,MovieDb>
+    public class DefaultUserStore : FlexMembershipUserStore<User,MovieDb>
     {
-        public DefaultUserRepository() : base(new MovieDb("name=Default"))
+        public DefaultUserStore() : base(new MovieDb("name=Default"))
         {
             
         }

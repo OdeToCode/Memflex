@@ -7,14 +7,14 @@ using Microsoft.Web.WebPages.OAuth;
 
 namespace FlexProviders.EF
 {
-    public class FlexMembershipUserRepository<TUser, TContext> 
-        : IFlexUserRepository, IFlexOAuthUserRepository 
+    public class FlexMembershipUserStore<TUser, TContext> 
+        : IFlexUserStore, IFlexOAuthDataStore 
             where TUser: class, IFlexMembershipUser, new()             
             where TContext : DbContext
     {
         private readonly TContext _context;
 
-        public FlexMembershipUserRepository (TContext context)
+        public FlexMembershipUserStore (TContext context)
         {
             _context = context;
         }

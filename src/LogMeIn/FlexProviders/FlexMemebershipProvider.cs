@@ -10,24 +10,24 @@ namespace FlexProviders
                                            IFlexOAuthProvider,
                                            IOpenAuthDataProvider 
     {
-        private readonly IFlexUserRepository _userRepository;
-        private readonly IFlexOAuthUserRepository _oAuthUserRepository;
+        private readonly IFlexUserStore _userStore;
+        private readonly IFlexOAuthDataStore _oAuthDataStore;
         private readonly IApplicationEnvironment _applicationEnvironment;
         private readonly ISecurityEncoder _encoder = new DefaultSecurityEncoder();
 
         public FlexMemebershipProvider(
-            IFlexUserRepository userRepository, 
-            IFlexOAuthUserRepository oAuthUserRepository,
+            IFlexUserStore userStore, 
+            IFlexOAuthDataStore oAuthDataStore,
             IApplicationEnvironment applicationEnvironment)            
         {         
-            _userRepository = userRepository;
-            _oAuthUserRepository = oAuthUserRepository;
+            _userStore = userStore;
+            _oAuthDataStore = oAuthDataStore;
             _applicationEnvironment = applicationEnvironment;
         }
 
         public bool Login(string username, string password)
         {
-            var user = _userRepository.GetUserByUsername(username);
+            var user = _userStore.GetUserByUsername(username);
             var encodedPassword = _encoder.Encode(password, user.Salt);
             var flag = encodedPassword.Equals(user.Password);
             if (flag)
@@ -45,7 +45,7 @@ namespace FlexProviders
 
         public void CreateAccount(IFlexMembershipUser user)
         {
-            var existingUser = _userRepository.GetUserByUsername(user.Username);
+            var existingUser = _userStore.GetUserByUsername(user.Username);
             if (existingUser != null)
             {
                 throw new MembershipCreateUserException("Cannot register with a duplicate username");
@@ -54,42 +54,42 @@ namespace FlexProviders
             user.Salt = user.Salt ?? _encoder.GenerateSalt();
             user.Password = _encoder.Encode(user.Password, user.Salt);
             user.IsLocal = true;
-            _userRepository.Add(user);
+            _userStore.Add(user);
         }
 
         public bool HasLocalAccount(string userName)
         {
-            var user = _userRepository.GetUserByUsername(userName);
+            var user = _userStore.GetUserByUsername(userName);
             return user.IsLocal;
         }
 
         public bool ChangePassword(string username, string oldPassword, string newPassword)
         {
-            var user = _userRepository.GetUserByUsername(username);
+            var user = _userStore.GetUserByUsername(username);
             var encodedPassword = _encoder.Encode(oldPassword, user.Salt);
             var flag = encodedPassword.Equals(user.Password);
             if (flag)
             {
                 user.Password = _encoder.Encode(newPassword, user.Salt);
-                _userRepository.Save(user);
+                _userStore.Save(user);
             }
             return false;
         }
 
         public void CreateOAuthAccount(string provider, string providerUserId, string username)
         {
-            _oAuthUserRepository.CreateOAuthAccount(provider, providerUserId, username);
+            _oAuthDataStore.CreateOAuthAccount(provider, providerUserId, username);
         }
 
         public string GetUserNameFromOpenAuth(string provider, string providerUserId)
         {
-            var user = _oAuthUserRepository.GetUserByOAuthProvider(provider, providerUserId);
+            var user = _oAuthDataStore.GetUserByOAuthProvider(provider, providerUserId);
             return user.Username;
         }
 
         public bool DissassociateOAuthAccount(string provider, string providerUserId)
         {
-            return _oAuthUserRepository.DeleteOAuthAccount(provider, providerUserId);
+            return _oAuthDataStore.DeleteOAuthAccount(provider, providerUserId);
         }
 
         public AuthenticationClientData GetOAuthClientData(string providerName)
@@ -111,7 +111,7 @@ namespace FlexProviders
 
         public IEnumerable<OAuthAccount> GetOAuthAccountsFromUserName(string username)
         {
-            return _oAuthUserRepository.GetOAuthAccountsForUser(username);
+            return _oAuthDataStore.GetOAuthAccountsForUser(username);
         }
 
         public void RequestOAuthAuthentication(string provider, string returnUrl)

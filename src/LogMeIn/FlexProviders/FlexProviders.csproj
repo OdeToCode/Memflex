@@ -55,16 +55,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Aspnet\AspnetEnvironment.cs" />
-    <Compile Include="EF\FlexMembershipUserRepository.cs" />
+    <Compile Include="EF\FlexMembershipUserStore.cs" />
     <Compile Include="FlexMemebershipProvider.cs" />
     <Compile Include="IApplicationEnvironment.cs" />
     <Compile Include="IFlexMembershipProvider.cs" />
     <Compile Include="IFlexMembershipUser.cs" />
     <Compile Include="FlexOAuthAccount.cs" />
     <Compile Include="IFlexOAuthProvider.cs" />
-    <Compile Include="IFlexOAuthUserRepository.cs" />
+    <Compile Include="IFlexOAuthDataStore.cs" />
     <Compile Include="ISecurityEncoder.cs" />
-    <Compile Include="IFlexUserRepository.cs" />
+    <Compile Include="IFlexUserStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

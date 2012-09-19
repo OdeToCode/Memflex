@@ -6,15 +6,15 @@ namespace LogMeIn.Tests.Integration
     {
         protected readonly FlexMemebershipProvider _provider;
         protected readonly FakeApplicationEnvironment _environment;
-        protected readonly DefaultUserRepository _repository;
+        protected readonly DefaultUserStore Store;
         protected TestDb _db;
 
         public IntegrationTest()
         {
             _db = new TestDb();
-            _repository = new DefaultUserRepository();            
+            Store = new DefaultUserStore();            
             _environment = new FakeApplicationEnvironment();
-            _provider = new FlexMemebershipProvider(_repository,_repository, _environment);
+            _provider = new FlexMemebershipProvider(Store,Store, _environment);
         }
  
     }

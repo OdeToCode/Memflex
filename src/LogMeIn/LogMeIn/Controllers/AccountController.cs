@@ -20,7 +20,7 @@ namespace LogMeIn.Controllers
         
         public AccountController()
         {
-            var repository = new FlexMembershipUserRepository<User,MovieDb>(new MovieDb());
+            var repository = new FlexMembershipUserStore<User,MovieDb>(new MovieDb());
             var environment = new AspnetEnvironment();
             var provider  = new FlexMemebershipProvider(repository,repository, environment);
             _oAuthProvider = provider;

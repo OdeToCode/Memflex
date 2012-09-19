@@ -1,6 +1,6 @@
 namespace FlexProviders
 {
-    public interface IFlexUserRepository
+    public interface IFlexUserStore
     {        
         IFlexMembershipUser GetUserByUsername(string username);
         IFlexMembershipUser Add(IFlexMembershipUser user);

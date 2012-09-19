@@ -3,7 +3,7 @@ using Microsoft.Web.WebPages.OAuth;
 
 namespace FlexProviders
 {
-    public interface IFlexOAuthUserRepository
+    public interface IFlexOAuthDataStore
     {
         bool DeleteOAuthAccount(string provider, string providerUserId);        
         IFlexMembershipUser GetUserByOAuthProvider(string provider, string providerUserId);        
