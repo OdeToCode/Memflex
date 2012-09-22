@@ -43,6 +43,19 @@ namespace LogMeIn.Tests.Integration
             return _db.FlexOAuthAccounts.FindAll(_db.FlexOAuthAccounts.User_Id == userId).Count();
         }
 
+        public bool CanFindRole(string name)
+        {
+            return _db.Roles.FindByName(name) != null;
+        }
+
+        public bool UserIsInRole(string username, string rolename)
+        {
+            var userId = _db.Users.FindByUsername(username).Id;
+            var roleId = _db.Roles.FindByName(rolename).Id;
+
+            return _db.RoleUsers.FindBy(User_Id: userId, Role_Id: roleId) != null;       
+        }
+
         private readonly dynamic _db;
         private readonly static Lazy<dynamic> _initializer = new Lazy<dynamic>(Initialize);
     }

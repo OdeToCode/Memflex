@@ -9,7 +9,7 @@ namespace LogMeIn.Tests.Integration.OAuth
         [AutoRollback]
         public void Can_Create_OAuth_Account()
         {
-            _provider.CreateOAuthAccount("Microsoft", "bitmask", "sallen");
+            MembershipProvider.CreateOAuthAccount("Microsoft", "bitmask", "sallen");
 
             Assert.True(_db.GetCountOfOAuthAccounts("sallen") == 1);
         }
@@ -18,8 +18,8 @@ namespace LogMeIn.Tests.Integration.OAuth
         [AutoRollback]
         public void Can_Update_OAuth_Account()
         {
-            _provider.CreateOAuthAccount("Microsoft", "bitmask", "sallen");
-            _provider.CreateOAuthAccount("Yahoo", "bitmask", "sallen");
+            MembershipProvider.CreateOAuthAccount("Microsoft", "bitmask", "sallen");
+            MembershipProvider.CreateOAuthAccount("Yahoo", "bitmask", "sallen");
 
             Assert.True(_db.GetCountOfOAuthAccounts("sallen") == 2);
         }

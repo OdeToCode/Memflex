@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using DotNetOpenAuth.AspNet;
 using Microsoft.Web.WebPages.OAuth;
 
-namespace FlexProviders
+namespace FlexProviders.Membership
 {
     public interface IFlexOAuthProvider
     {

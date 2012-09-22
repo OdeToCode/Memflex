@@ -13,9 +13,9 @@ namespace LogMeIn.Tests.Integration.Membership
             var username = "sallen";
             var password = "12345678";
             var user = new User {Username = username, Password = password};
-            _provider.CreateAccount(user);
+            MembershipProvider.CreateAccount(user);
 
-            bool result = _provider.Login(username, password);
+            bool result = MembershipProvider.Login(username, password);
 
             Assert.True(result);
         }
@@ -27,9 +27,9 @@ namespace LogMeIn.Tests.Integration.Membership
             var username = "sallen";
             var password = "12345678";
             var user = new User { Username = username, Password = password };
-            _provider.CreateAccount(user);
+            MembershipProvider.CreateAccount(user);
 
-            bool result = _provider.Login(username, "foo");
+            bool result = MembershipProvider.Login(username, "foo");
 
             Assert.False(result);
         }

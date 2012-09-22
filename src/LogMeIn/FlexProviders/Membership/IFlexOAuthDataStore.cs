@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Microsoft.Web.WebPages.OAuth;
 
-namespace FlexProviders
+namespace FlexProviders.Membership
 {
     public interface IFlexOAuthDataStore
     {

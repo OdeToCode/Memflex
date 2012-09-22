@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace FlexProviders
+namespace FlexProviders.Membership
 {
     public interface IFlexMembershipUser
     {

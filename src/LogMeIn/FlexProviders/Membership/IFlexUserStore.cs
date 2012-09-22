@@ -1,4 +1,4 @@
-namespace FlexProviders
+namespace FlexProviders.Membership
 {
     public interface IFlexUserStore
     {        

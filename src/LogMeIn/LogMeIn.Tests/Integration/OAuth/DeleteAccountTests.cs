@@ -9,10 +9,10 @@ namespace LogMeIn.Tests.Integration.OAuth
         [AutoRollback]
         public void Can_Delete_OAuthAccount()
         {
-            _provider.CreateOAuthAccount("Microsoft", "bitmask", "sallen");
-            _provider.CreateOAuthAccount("Google", "bitmask", "sallen");
+            MembershipProvider.CreateOAuthAccount("Microsoft", "bitmask", "sallen");
+            MembershipProvider.CreateOAuthAccount("Google", "bitmask", "sallen");
 
-            var result = _provider.DissassociateOAuthAccount("Google", "bitmask");
+            var result = MembershipProvider.DissassociateOAuthAccount("Google", "bitmask");
 
             Assert.True(result);
         }
@@ -21,9 +21,9 @@ namespace LogMeIn.Tests.Integration.OAuth
         [AutoRollback]
         public void Can_Not_Delete_Last_Account()
         {        
-            _provider.CreateOAuthAccount("Google", "bitmask", "sallen");
+            MembershipProvider.CreateOAuthAccount("Google", "bitmask", "sallen");
 
-            var result = _provider.DissassociateOAuthAccount("Google", "bitmask");
+            var result = MembershipProvider.DissassociateOAuthAccount("Google", "bitmask");
 
             Assert.False(result);
         }

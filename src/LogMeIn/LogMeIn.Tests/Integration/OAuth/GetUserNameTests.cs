@@ -9,9 +9,9 @@ namespace LogMeIn.Tests.Integration.OAuth
         [AutoRollback]
         public void Can_Get_Username_Given_ProviderInfo()
         {
-            _provider.CreateOAuthAccount("Microsoft", "bitmask", "sallen");
+            MembershipProvider.CreateOAuthAccount("Microsoft", "bitmask", "sallen");
 
-            var name = _provider.GetUserNameFromOpenAuth("Microsoft", "bitmask");
+            var name = MembershipProvider.GetUserNameFromOpenAuth("Microsoft", "bitmask");
 
             Assert.Equal("sallen", name);
         }

@@ -13,7 +13,7 @@ namespace LogMeIn.Tests.Integration.Membership
         {
             var user = new User() {Username = "sallen", Password = "12345678"};
 
-            _provider.CreateAccount(user);
+            MembershipProvider.CreateAccount(user);
 
             Assert.True(_db.CanFindUsername("sallen"));
         }
@@ -24,9 +24,9 @@ namespace LogMeIn.Tests.Integration.Membership
         {
             var user = new User() { Username = "sallen", Password = "12345678" };
 
-            _provider.CreateAccount(user);
+            MembershipProvider.CreateAccount(user);
 
-            Assert.Throws<MembershipCreateUserException>(() => _provider.CreateAccount(user));
+            Assert.Throws<MembershipCreateUserException>(() => MembershipProvider.CreateAccount(user));
         }
 
         [Fact]
@@ -35,9 +35,9 @@ namespace LogMeIn.Tests.Integration.Membership
         {
             var user = new User() { Username = "sallen", Password = "12345678" };
             
-            _provider.CreateAccount(user);
+            MembershipProvider.CreateAccount(user);
             
-            Assert.True(_provider.HasLocalAccount("sallen"));
+            Assert.True(MembershipProvider.HasLocalAccount("sallen"));
         }
     }
 }

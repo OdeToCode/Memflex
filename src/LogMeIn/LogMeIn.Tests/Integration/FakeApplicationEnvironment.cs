@@ -1,6 +1,7 @@
 using System.Web;
 using DotNetOpenAuth.AspNet;
 using FlexProviders;
+using FlexProviders.Membership;
 
 namespace LogMeIn.Tests.Integration
 {

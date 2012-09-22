@@ -5,13 +5,13 @@ namespace LogMeIn.Migrations
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Resources;
     
-    public sealed partial class InitialCreate : IMigrationMetadata
+    public sealed partial class Create : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialCreate));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Create));
         
         string IMigrationMetadata.Id
         {
-            get { return "201209180159144_InitialCreate"; }
+            get { return "201209221621381_Create"; }
         }
         
         string IMigrationMetadata.Source

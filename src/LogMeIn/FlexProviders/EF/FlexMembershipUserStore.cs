@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
+using FlexProviders.Membership;
 using Microsoft.Web.WebPages.OAuth;
 
 namespace FlexProviders.EF

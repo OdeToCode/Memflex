@@ -127,6 +127,9 @@
     <Compile Include="Integration\OAuth\CreateUpdateAccountTests.cs" />
     <Compile Include="Integration\OAuth\DeleteAccountTests.cs" />
     <Compile Include="Integration\OAuth\GetUserNameTests.cs" />
+    <Compile Include="Integration\Roles\CreateRoles.cs" />
+    <Compile Include="Integration\Roles\DeleteRoles.cs" />
+    <Compile Include="Integration\Roles\QueryRoles.cs" />
     <Compile Include="Integration\TestDB.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -146,6 +149,7 @@
       <Name>LogMeIn</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

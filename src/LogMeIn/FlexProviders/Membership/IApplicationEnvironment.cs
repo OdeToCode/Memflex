@@ -1,7 +1,7 @@
-﻿using System.Web;
+using System.Web;
 using DotNetOpenAuth.AspNet;
 
-namespace FlexProviders
+namespace FlexProviders.Membership
 {
     public interface IApplicationEnvironment
     {

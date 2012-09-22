@@ -1,4 +1,5 @@
 using System;
+using FlexProviders.Membership;
 using Xunit;
 
 namespace FlexProviders.Tests.Security.Encryption

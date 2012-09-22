@@ -13,10 +13,10 @@ namespace LogMeIn.Tests.Integration.Membership
             var username = "sallen";
             var password = "12345678";
             var user = new User { Username = username, Password = password };
-            _provider.CreateAccount(user);
+            MembershipProvider.CreateAccount(user);
 
             var firstEncodedPassword = _db.GetPassword(username);
-            _provider.ChangePassword(username, password, "foo");
+            MembershipProvider.ChangePassword(username, password, "foo");
             var secondEncodedPassword = _db.GetPassword(username);
 
             Assert.NotEqual(firstEncodedPassword, secondEncodedPassword);

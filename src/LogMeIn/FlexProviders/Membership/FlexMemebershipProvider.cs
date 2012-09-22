@@ -4,7 +4,7 @@ using System.Web.Security;
 using DotNetOpenAuth.AspNet;
 using Microsoft.Web.WebPages.OAuth;
 
-namespace FlexProviders
+namespace FlexProviders.Membership
 {
     public class FlexMemebershipProvider : IFlexMembershipProvider, 
                                            IFlexOAuthProvider,

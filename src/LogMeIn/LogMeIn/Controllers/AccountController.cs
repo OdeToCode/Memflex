@@ -6,6 +6,7 @@ using DotNetOpenAuth.AspNet;
 using FlexProviders;
 using FlexProviders.Aspnet;
 using FlexProviders.EF;
+using FlexProviders.Membership;
 using LogMeIn.Models;
 using Microsoft.Web.WebPages.OAuth;
 
@@ -220,12 +221,11 @@ namespace LogMeIn.Controllers
                 return RedirectToAction("ExternalLoginFailure");
             }
 
-            // todo: review
-            throw new NotImplementedException();
-            //if (_oAuthProvider.Login(result.Provider, result.ProviderUserId, persistCookie: false))
-            //{
-            //    return RedirectToLocal(returnUrl);
-            //}
+   
+            if (_oAuthProvider.OAuthLogin(result.Provider, result.ProviderUserId, persistCookie: false))
+            {
+               return RedirectToLocal(returnUrl);
+            }
 
             if (User.Identity.IsAuthenticated)
             {
