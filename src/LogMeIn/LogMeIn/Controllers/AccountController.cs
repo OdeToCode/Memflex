@@ -210,16 +210,15 @@ namespace LogMeIn.Controllers
                 return RedirectToAction("ExternalLoginFailure");
             }
 
-   
-            if (_oAuthProvider.OAuthLogin(result.Provider, result.ProviderUserId, persistCookie: false))
+            if(_oAuthProvider.OAuthLogin(result.Provider, result.ProviderUserId, persistCookie: false))
             {
-               return RedirectToLocal(returnUrl);
+                return RedirectToLocal(returnUrl);
             }
 
             if (User.Identity.IsAuthenticated)
             {
                 // If the current user is logged in add the new account
-                _oAuthProvider.CreateOAuthAccount(result.Provider, result.ProviderUserId, User.Identity.Name);
+                _oAuthProvider.CreateOAuthAccount(result.Provider, result.ProviderUserId, User.Identity.Name);                
                 return RedirectToLocal(returnUrl);
             }
             else
@@ -250,20 +249,17 @@ namespace LogMeIn.Controllers
 
             if (ModelState.IsValid)
             {
+                if (!_membershipProvider.HasLocalAccount(model.UserName))
+                {
+                    _oAuthProvider.CreateOAuthAccount(provider, providerUserId, model.UserName);
+                   _oAuthProvider.OAuthLogin(provider, providerUserId, persistCookie: false);
 
-                // TODO: review
-                //if (!_userProfileManager.Exists(model.UserName))
-                //{
-                //    _userProfileManager.Add(model.UserName);
-                //    _webSecurity.CreateOrUpdateAccount(provider, providerUserId, model.UserName);
-                //    _webSecurity.Login(provider, providerUserId, persistCookie: false);
-
-                //    return RedirectToLocal(returnUrl);
-                //}
-                //else
-                //{
-                //    ModelState.AddModelError("UserName", "User name already exists. Please enter a different user name.");
-                //}
+                    return RedirectToLocal(returnUrl);
+                }
+                else
+                {
+                   ModelState.AddModelError("UserName", "User name already exists. Please enter a different user name.");
+                }
             }
 
             ViewBag.ProviderDisplayName = _oAuthProvider.GetOAuthClientData(provider).DisplayName;

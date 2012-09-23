@@ -86,7 +86,11 @@ namespace FlexProviders.Membership
         public string GetUserNameFromOpenAuth(string provider, string providerUserId)
         {
             var user = _userStore.GetUserByOAuthProvider(provider, providerUserId);
-            return user.Username;
+            if(user != null)
+            {
+                return user.Username;
+            }
+            return String.Empty;
         }
 
         public bool DissassociateOAuthAccount(string provider, string providerUserId)
@@ -97,13 +101,6 @@ namespace FlexProviders.Membership
         public AuthenticationClientData GetOAuthClientData(string providerName)
         {
             return _authenticationClients[providerName];
-        }
-
-        public void RegisterClient(IAuthenticationClient client,
-            string displayName, IDictionary<string, object> extraData)
-        {
-            var clientData = new AuthenticationClientData(client, displayName, extraData);
-            _authenticationClients.Add(client.ProviderName, clientData);
         }
 
         public ICollection<AuthenticationClientData> RegisteredClientData
@@ -140,6 +137,13 @@ namespace FlexProviders.Membership
             var context = _applicationEnvironment.AcquireContext();
             var securityManager = new OpenAuthSecurityManager(context, oauthProvider.AuthenticationClient, this);
             return securityManager.Login(providerUserId, persistCookie);
+        }
+
+        public static void RegisterClient(IAuthenticationClient client,
+           string displayName, IDictionary<string, object> extraData)
+        {
+            var clientData = new AuthenticationClientData(client, displayName, extraData);
+            _authenticationClients.Add(client.ProviderName, clientData);
         }
 
         private static readonly Dictionary<string, AuthenticationClientData> _authenticationClients =
