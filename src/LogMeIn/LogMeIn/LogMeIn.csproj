@@ -42,6 +42,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="StructureMap">
+      <HintPath>..\packages\structuremap.2.6.4.1\lib\net40\StructureMap.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
@@ -165,10 +168,15 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\StructuremapMvc.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <None Include="Controllers\Copy of AccountController.bak" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="DependencyResolution\IoC.cs" />
+    <Compile Include="DependencyResolution\SmDependencyResolver.cs" />
+    <Compile Include="DependencyResolution\SmFilterProvider.cs" />
+    <Compile Include="Filters\FlexAuthorizeAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -177,7 +185,12 @@
       <DependentUpon>201209221621381_Create.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\Movies.cs" />
+    <Compile Include="Models\MovieDb.cs" />
+    <Compile Include="Models\Movie.cs" />
+    <Compile Include="Models\Role.cs" />
+    <Compile Include="Models\RoleStore.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="Models\UserStore.cs" />
     <Compile Include="Security\IUserProfileManager.cs" />
     <Compile Include="Security\IWebSecurity.cs" />
     <Compile Include="Models\AccountModels.cs" />
@@ -304,7 +317,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Filters\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

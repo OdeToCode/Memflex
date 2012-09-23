@@ -1,5 +1,3 @@
-using FlexProviders;
-using FlexProviders.EF;
 using FlexProviders.Membership;
 using FlexProviders.Roles;
 using LogMeIn.Models;
@@ -8,9 +6,10 @@ namespace LogMeIn.Tests.Integration
 {
     public class IntegrationTest
     {
-        protected readonly FlexMemebershipProvider MembershipProvider;
+        protected readonly FlexMembershipProvider MembershipProvider;
         protected readonly FakeApplicationEnvironment Environment;
-        protected readonly DefaultUserStore UserStore;
+        protected readonly UserStore UserStore;
+        protected readonly RoleStore RoleStore;
         protected readonly FlexRoleProvider RoleProvider;
         
         protected TestDb _db;
@@ -19,11 +18,11 @@ namespace LogMeIn.Tests.Integration
         {
             var context = new MovieDb("name=Default");
             _db = new TestDb();
-            UserStore = new DefaultUserStore(context);
-            RoleProvider = new FlexRoleProvider();
-            RoleProvider.Initialize(new DefaultRoleStore(context));
+            UserStore = new UserStore(context);
+            RoleStore = new RoleStore(context);           
             Environment = new FakeApplicationEnvironment();
-            MembershipProvider = new FlexMemebershipProvider(UserStore,UserStore, Environment);
+            RoleProvider = new FlexRoleProvider(RoleStore);
+            MembershipProvider = new FlexMembershipProvider(UserStore, Environment);
         }
     }
 }

@@ -6,31 +6,33 @@ using Microsoft.Web.WebPages.OAuth;
 
 namespace FlexProviders.Membership
 {
-    public class FlexMemebershipProvider : IFlexMembershipProvider, 
+    public class FlexMembershipProvider : IFlexMembershipProvider, 
                                            IFlexOAuthProvider,
                                            IOpenAuthDataProvider 
     {
         private readonly IFlexUserStore _userStore;
-        private readonly IFlexOAuthDataStore _oAuthDataStore;
         private readonly IApplicationEnvironment _applicationEnvironment;
         private readonly ISecurityEncoder _encoder = new DefaultSecurityEncoder();
 
-        public FlexMemebershipProvider(
+        public FlexMembershipProvider(
             IFlexUserStore userStore, 
-            IFlexOAuthDataStore oAuthDataStore,
             IApplicationEnvironment applicationEnvironment)            
         {         
             _userStore = userStore;
-            _oAuthDataStore = oAuthDataStore;
             _applicationEnvironment = applicationEnvironment;
         }
 
         public bool Login(string username, string password)
         {
             var user = _userStore.GetUserByUsername(username);
+            if(user == null)
+            {
+                return false;
+            }
+
             var encodedPassword = _encoder.Encode(password, user.Salt);
-            var flag = encodedPassword.Equals(user.Password);
-            if (flag)
+            var passed = encodedPassword.Equals(user.Password);
+            if (passed)
             {
                 _applicationEnvironment.IssueAuthTicket(username, true);
                 return true;
@@ -60,7 +62,7 @@ namespace FlexProviders.Membership
         public bool HasLocalAccount(string userName)
         {
             var user = _userStore.GetUserByUsername(userName);
-            return user.IsLocal;
+            return user != null && user.IsLocal;
         }
 
         public bool ChangePassword(string username, string oldPassword, string newPassword)
@@ -78,18 +80,18 @@ namespace FlexProviders.Membership
 
         public void CreateOAuthAccount(string provider, string providerUserId, string username)
         {
-            _oAuthDataStore.CreateOAuthAccount(provider, providerUserId, username);
+            _userStore.CreateOAuthAccount(provider, providerUserId, username);
         }
 
         public string GetUserNameFromOpenAuth(string provider, string providerUserId)
         {
-            var user = _oAuthDataStore.GetUserByOAuthProvider(provider, providerUserId);
+            var user = _userStore.GetUserByOAuthProvider(provider, providerUserId);
             return user.Username;
         }
 
         public bool DissassociateOAuthAccount(string provider, string providerUserId)
         {
-            return _oAuthDataStore.DeleteOAuthAccount(provider, providerUserId);
+            return _userStore.DeleteOAuthAccount(provider, providerUserId);
         }
 
         public AuthenticationClientData GetOAuthClientData(string providerName)
@@ -111,7 +113,7 @@ namespace FlexProviders.Membership
 
         public IEnumerable<OAuthAccount> GetOAuthAccountsFromUserName(string username)
         {
-            return _oAuthDataStore.GetOAuthAccountsForUser(username);
+            return _userStore.GetOAuthAccountsForUser(username);
         }
 
         public void RequestOAuthAuthentication(string provider, string returnUrl)

@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Security;
 using DotNetOpenAuth.AspNet;
-using FlexProviders;
-using FlexProviders.Aspnet;
-using FlexProviders.EF;
 using FlexProviders.Membership;
 using LogMeIn.Models;
 using Microsoft.Web.WebPages.OAuth;
@@ -19,18 +16,10 @@ namespace LogMeIn.Controllers
         private readonly IFlexOAuthProvider _oAuthProvider;
         private readonly ISecurityEncoder _encoder = new DefaultSecurityEncoder();
         
-        public AccountController()
+        public AccountController(IFlexMembershipProvider membership, IFlexOAuthProvider oauth)
         {
-            var repository = new FlexMembershipUserStore<User,MovieDb>(new MovieDb());
-            var environment = new AspnetEnvironment();
-            var provider  = new FlexMemebershipProvider(repository,repository, environment);
-            _oAuthProvider = provider;
-            _membershipProvider = provider;
-        }
-
-        public AccountController(IFlexMembershipProvider provider)
-        {
-            _membershipProvider = provider;
+            _membershipProvider = membership;
+            _oAuthProvider = oauth;
         }
 
         //

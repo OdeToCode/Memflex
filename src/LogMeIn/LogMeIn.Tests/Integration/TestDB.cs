@@ -23,8 +23,18 @@ namespace LogMeIn.Tests.Integration
         private static void UseEntityFrameworkToCreateDatabase()
         {
             Database.Delete("Default");
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<MovieDb, Configuration>("Default"));            
-            var forcedResultToCreateDatabaseHere = new MovieDb("name=Default").Users.ToList();            
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<MovieDb, Configuration>("Default"));
+            var context = new MovieDb("name=Default");
+            var users = context.Users.ToList();           
+            var roles = context.Roles.ToList();
+            foreach(var role in roles)
+            {
+                context.Roles.Remove(role);
+            }
+            foreach(var user in users)
+            {
+                context.Users.Remove(user);
+            }
         }
 
         public bool CanFindUsername(string username)

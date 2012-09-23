@@ -118,7 +118,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Integration\DefaultRepository.cs" />
     <Compile Include="Integration\FakeApplicationEnvironment.cs" />
     <Compile Include="Integration\IntegrationTest.cs" />
     <Compile Include="Integration\Membership\ChangePasswordTests.cs" />
@@ -134,7 +133,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App.config" />
+    <Content Include="App.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

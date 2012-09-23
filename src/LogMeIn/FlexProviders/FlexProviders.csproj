@@ -58,17 +58,17 @@
     <Compile Include="EF\FlexMembershipUserStore.cs" />
     <Compile Include="EF\FlexRoleStore.cs" />
     <Compile Include="EF\IFlexRole.cs" />
-    <Compile Include="Membership\FlexMemebershipProvider.cs" />
+    <Compile Include="Membership\FlexMembershipProvider.cs" />
     <Compile Include="Membership\FlexOAuthAccount.cs" />
     <Compile Include="Membership\IApplicationEnvironment.cs" />
     <Compile Include="Membership\IFlexMembershipProvider.cs" />
     <Compile Include="Membership\IFlexMembershipUser.cs" />
-    <Compile Include="Membership\IFlexOAuthDataStore.cs" />
     <Compile Include="Membership\IFlexOAuthProvider.cs" />
     <Compile Include="Membership\IFlexUserStore.cs" />
     <Compile Include="Membership\ISecurityEncoder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Roles\FlexRoleProvider.cs" />
+    <Compile Include="Roles\IFlexRoleProvider.cs" />
     <Compile Include="Roles\IFlexRoleStore.cs" />
   </ItemGroup>
   <ItemGroup>

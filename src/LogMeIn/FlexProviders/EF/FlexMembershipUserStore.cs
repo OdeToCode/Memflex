@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Entity;
@@ -9,7 +10,7 @@ using Microsoft.Web.WebPages.OAuth;
 namespace FlexProviders.EF
 {
     public class FlexMembershipUserStore<TUser, TContext> 
-        : IFlexUserStore, IFlexOAuthDataStore 
+        : IFlexUserStore
             where TUser: class, IFlexMembershipUser, new()             
             where TContext : DbContext
     {
