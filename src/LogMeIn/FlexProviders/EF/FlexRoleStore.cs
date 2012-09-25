@@ -6,14 +6,13 @@ using System.Linq;
 
 namespace FlexProviders.EF
 {
-    public class FlexRoleStore<TRole, TUser, TContext> : IFlexRoleStore
+    public class FlexRoleStore<TRole, TUser> : IFlexRoleStore
         where TRole : class, IFlexRole<TUser>, new()
         where TUser : class, IFlexMembershipUser
-        where TContext : DbContext
     {
-        private readonly TContext _context;
+        private readonly DbContext _context;
 
-        public FlexRoleStore(TContext context)
+        public FlexRoleStore(DbContext context)
         {
             _context = context;
         }

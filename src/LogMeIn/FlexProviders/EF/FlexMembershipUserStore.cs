@@ -9,14 +9,13 @@ using Microsoft.Web.WebPages.OAuth;
 
 namespace FlexProviders.EF
 {
-    public class FlexMembershipUserStore<TUser, TContext> 
+    public class FlexMembershipUserStore<TUser> 
         : IFlexUserStore
             where TUser: class, IFlexMembershipUser, new()             
-            where TContext : DbContext
     {
-        private readonly TContext _context;
+        private readonly DbContext _context;
 
-        public FlexMembershipUserStore (TContext context)
+        public FlexMembershipUserStore (DbContext context)
         {
             _context = context;
         }
