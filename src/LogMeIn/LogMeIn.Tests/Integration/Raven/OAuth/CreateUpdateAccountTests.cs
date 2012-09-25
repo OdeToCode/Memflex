@@ -1,27 +1,26 @@
+using System.Linq;
 using Xunit;
 using Xunit.Extensions;
 
-namespace LogMeIn.Tests.Integration.OAuth
+namespace LogMeIn.Tests.Integration.Raven.OAuth
 {
     public class CreateUpdateAccountTests : IntegrationTest
     {
         [Fact]
-        [AutoRollback]
         public void Can_Create_OAuth_Account()
         {
             MembershipProvider.CreateOAuthAccount("Microsoft", "bitmask", "sallen");
 
-            Assert.True(_db.GetCountOfOAuthAccounts("sallen") == 1);
+            Assert.Equal(1, Verifier.Query<User>().Single(u=>u.Username == "sallen").OAuthAccounts.Count());
         }
 
         [Fact]
-        [AutoRollback]
         public void Can_Update_OAuth_Account()
         {
             MembershipProvider.CreateOAuthAccount("Microsoft", "bitmask", "sallen");
             MembershipProvider.CreateOAuthAccount("Yahoo", "bitmask", "sallen");
 
-            Assert.True(_db.GetCountOfOAuthAccounts("sallen") == 2);
+            Assert.Equal(2, Verifier.Query<User>().Single(u => u.Username == "sallen").OAuthAccounts.Count());
         }
     }
 }

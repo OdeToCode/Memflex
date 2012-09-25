@@ -2,7 +2,7 @@ using LogMeIn.Models;
 using Xunit;
 using Xunit.Extensions;
 
-namespace LogMeIn.Tests.Integration.Membership
+namespace LogMeIn.Tests.Integration.EF.Membership
 {
     public class ChangePasswordTests : IntegrationTest
     {

@@ -2,17 +2,16 @@ using LogMeIn.Models;
 using Xunit;
 using Xunit.Extensions;
 
-namespace LogMeIn.Tests.Integration.Membership
+namespace LogMeIn.Tests.Integration.Raven.Membership
 {
-    public class Login_Tests : IntegrationTest
+    public class LoginTests : IntegrationTest
     {
-        [Fact] 
-        [AutoRollback]
+        [Fact]
         public void Can_Login_With_Good_Password()
         {
             var username = "sallen";
             var password = "12345678";
-            var user = new User {Username = username, Password = password};
+            var user = new User { Username = username, Password = password };
             MembershipProvider.CreateAccount(user);
 
             bool result = MembershipProvider.Login(username, password);
@@ -21,7 +20,6 @@ namespace LogMeIn.Tests.Integration.Membership
         }
 
         [Fact]
-        [AutoRollback]
         public void Cannot_Login_With_Bad_Password()
         {
             var username = "sallen";

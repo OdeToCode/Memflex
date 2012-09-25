@@ -1,8 +1,8 @@
-﻿using LogMeIn.Models;
+using LogMeIn.Models;
 using Xunit;
 using Xunit.Extensions;
 
-namespace LogMeIn.Tests.Integration.Roles
+namespace LogMeIn.Tests.Integration.EF.Roles
 {
     public class QueryRoles : IntegrationTest
     {

@@ -2,7 +2,7 @@ using FlexProviders.Membership;
 using FlexProviders.Roles;
 using LogMeIn.Models;
 
-namespace LogMeIn.Tests.Integration
+namespace LogMeIn.Tests.Integration.EF
 {
     public class IntegrationTest
     {

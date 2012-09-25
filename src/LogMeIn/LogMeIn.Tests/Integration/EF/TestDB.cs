@@ -1,11 +1,10 @@
 using System;
 using System.Data.Entity;
 using System.Linq;
-using FlexProviders.EF;
 using LogMeIn.Migrations;
 using LogMeIn.Models;
 
-namespace LogMeIn.Tests.Integration
+namespace LogMeIn.Tests.Integration.EF
 {
     public class TestDb 
     {
