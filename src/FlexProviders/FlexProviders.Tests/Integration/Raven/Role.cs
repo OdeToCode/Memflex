@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using FlexProviders.Raven;
-using LogMeIn.Models;
 
-namespace LogMeIn.Tests.Integration.Raven
+namespace FlexProviders.Tests.Integration.Raven
 {
     public class Role : IFlexRole<User>
     {

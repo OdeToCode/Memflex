@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Configuration.Provider;
 using System.Linq;
-using System.Web.Security;
 
 namespace FlexProviders.Roles
 {

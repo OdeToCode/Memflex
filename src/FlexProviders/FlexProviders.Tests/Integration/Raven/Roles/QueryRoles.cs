@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace LogMeIn.Tests.Integration.Raven.Roles
+namespace FlexProviders.Tests.Integration.Raven.Roles
 {
     public class QueryRoles : IntegrationTest
     {

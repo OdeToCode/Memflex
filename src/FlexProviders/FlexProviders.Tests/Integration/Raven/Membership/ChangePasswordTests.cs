@@ -1,8 +1,7 @@
 using System.Linq;
-using LogMeIn.Models;
 using Xunit;
 
-namespace LogMeIn.Tests.Integration.Raven.Membership
+namespace FlexProviders.Tests.Integration.Raven.Membership
 {
     public class ChangePasswordTests : IntegrationTest
     {

@@ -1,8 +1,6 @@
-using LogMeIn.Models;
 using Xunit;
-using Xunit.Extensions;
 
-namespace LogMeIn.Tests.Integration.Raven.Membership
+namespace FlexProviders.Tests.Integration.Raven.Membership
 {
     public class LoginTests : IntegrationTest
     {

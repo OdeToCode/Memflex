@@ -1,8 +1,7 @@
 using FlexProviders.Membership;
 using FlexProviders.Roles;
-using LogMeIn.Models;
 
-namespace LogMeIn.Tests.Integration.EF
+namespace FlexProviders.Tests.Integration.EF
 {
     public class IntegrationTest
     {
@@ -16,7 +15,7 @@ namespace LogMeIn.Tests.Integration.EF
 
         public IntegrationTest()
         {
-            var context = new MovieDb("name=Default");
+            var context = new SomeDb("name=Default");
             _db = new TestDb();
             UserStore = new UserStore(context);
             RoleStore = new RoleStore(context);           

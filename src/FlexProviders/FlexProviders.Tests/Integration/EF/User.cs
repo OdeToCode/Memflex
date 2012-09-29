@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using FlexProviders.Membership;
 
-namespace FlexProviders.Tests.Integration.Raven
+namespace FlexProviders.Tests.Integration.EF
 {
     public class User : IFlexMembershipUser
     {
@@ -10,6 +10,8 @@ namespace FlexProviders.Tests.Integration.Raven
         public string Password { get; set; }
         public string Salt { get; set; }
         public bool IsLocal { get; set; }
-        public ICollection<FlexOAuthAccount> OAuthAccounts { get; set; }
+        public int FavoriteNumber { get; set; }
+        public virtual ICollection<FlexOAuthAccount> OAuthAccounts { get; set; }
+        public ICollection<Role> Roles { get; set; }
     }
 }

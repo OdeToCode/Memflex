@@ -1,9 +1,7 @@
 using System.Linq;
-using LogMeIn.Models;
 using Xunit;
-using Xunit.Extensions;
 
-namespace LogMeIn.Tests.Integration.Raven.Roles
+namespace FlexProviders.Tests.Integration.Raven.Roles
 {
     public class CreateRoles : IntegrationTest
     {

@@ -7,8 +7,7 @@ using Raven.Client;
 using Raven.Client.Embedded;
 using Raven.Client.Listeners;
 
-
-namespace LogMeIn.Tests.Integration.Raven
+namespace FlexProviders.Tests.Integration.Raven
 {
     public class IntegrationTest : IDisposable
     {

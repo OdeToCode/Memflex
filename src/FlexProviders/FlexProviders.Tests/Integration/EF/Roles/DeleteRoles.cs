@@ -1,9 +1,8 @@
 using System.Configuration.Provider;
-using LogMeIn.Models;
 using Xunit;
 using Xunit.Extensions;
 
-namespace LogMeIn.Tests.Integration.EF.Roles
+namespace FlexProviders.Tests.Integration.EF.Roles
 {
     public class DeleteRoles : IntegrationTest
     {

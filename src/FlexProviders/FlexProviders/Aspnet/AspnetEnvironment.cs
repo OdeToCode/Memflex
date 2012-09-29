@@ -2,7 +2,6 @@
 using System.Web.Security;
 using DotNetOpenAuth.AspNet;
 using FlexProviders.Membership;
-using Microsoft.Web.WebPages.OAuth;
 
 namespace FlexProviders.Aspnet
 {

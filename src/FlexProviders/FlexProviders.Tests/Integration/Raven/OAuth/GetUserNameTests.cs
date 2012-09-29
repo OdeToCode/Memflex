@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace LogMeIn.Tests.Integration.Raven.OAuth
+namespace FlexProviders.Tests.Integration.Raven.OAuth
 {
     public class GetUserNameTests : IntegrationTest
     {

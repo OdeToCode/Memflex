@@ -1,10 +1,9 @@
 using System;
 using System.Data.Entity;
 using System.Linq;
-using LogMeIn.Migrations;
-using LogMeIn.Models;
+using FlexProviders.Tests.Integration.EF.Migrations;
 
-namespace LogMeIn.Tests.Integration.EF
+namespace FlexProviders.Tests.Integration.EF
 {
     public class TestDb 
     {
@@ -13,17 +12,17 @@ namespace LogMeIn.Tests.Integration.EF
             _db = _initializer.Value;
         }
 
-        protected static dynamic Initialize()
+        static dynamic Initialize()
         {
             UseEntityFrameworkToCreateDatabase();
             return Simple.Data.Database.OpenNamedConnection("Default");
         }
 
-        private static void UseEntityFrameworkToCreateDatabase()
+        static void UseEntityFrameworkToCreateDatabase()
         {
             Database.Delete("Default");
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<MovieDb, Configuration>("Default"));
-            var context = new MovieDb("name=Default");
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<SomeDb, Configuration>("Default"));
+            var context = new SomeDb("name=Default");
             var users = context.Users.ToList();           
             var roles = context.Roles.ToList();
             foreach(var role in roles)

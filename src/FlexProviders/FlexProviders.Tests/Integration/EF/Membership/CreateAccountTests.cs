@@ -1,9 +1,8 @@
 using System.Web.Security;
-using LogMeIn.Models;
 using Xunit;
 using Xunit.Extensions;
 
-namespace LogMeIn.Tests.Integration.EF.Membership
+namespace FlexProviders.Tests.Integration.EF.Membership
 {
     public class CreateAccountTests : IntegrationTest
     {

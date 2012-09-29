@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2998468F-1992-458D-90E4-F97F44EBD707}"
+	ProjectSection(SolutionItems) = preProject
+		..\.gitignore = ..\.gitignore
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{AB40ECA1-2AB3-4D25-907F-083E2226D8A9}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogMeIn", "Sample\LogMeIn.csproj", "{F32C3978-5D6F-4B9D-9B39-A5E3F03BCFE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlexProviders", "FlexProviders\FlexProviders\FlexProviders.csproj", "{9C987907-BD64-4100-89D4-F4BCFB77768B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlexProviders.Tests", "FlexProviders\FlexProviders.Tests\FlexProviders.Tests.csproj", "{DDC3DA05-09D0-4D77-98C6-8CEA5ED4099A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F32C3978-5D6F-4B9D-9B39-A5E3F03BCFE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F32C3978-5D6F-4B9D-9B39-A5E3F03BCFE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F32C3978-5D6F-4B9D-9B39-A5E3F03BCFE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F32C3978-5D6F-4B9D-9B39-A5E3F03BCFE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C987907-BD64-4100-89D4-F4BCFB77768B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C987907-BD64-4100-89D4-F4BCFB77768B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C987907-BD64-4100-89D4-F4BCFB77768B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C987907-BD64-4100-89D4-F4BCFB77768B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDC3DA05-09D0-4D77-98C6-8CEA5ED4099A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDC3DA05-09D0-4D77-98C6-8CEA5ED4099A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDC3DA05-09D0-4D77-98C6-8CEA5ED4099A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDC3DA05-09D0-4D77-98C6-8CEA5ED4099A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

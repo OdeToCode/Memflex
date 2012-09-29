@@ -1,8 +1,7 @@
 using System.Linq;
 using Xunit;
-using Xunit.Extensions;
 
-namespace LogMeIn.Tests.Integration.Raven.OAuth
+namespace FlexProviders.Tests.Integration.Raven.OAuth
 {
     public class CreateUpdateAccountTests : IntegrationTest
     {

@@ -1,9 +1,8 @@
 using System.Configuration.Provider;
 using System.Linq;
-using LogMeIn.Models;
 using Xunit;
 
-namespace LogMeIn.Tests.Integration.Raven.Roles
+namespace FlexProviders.Tests.Integration.Raven.Roles
 {
     public class DeleteRoles : IntegrationTest
     {

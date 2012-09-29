@@ -1,11 +1,8 @@
 using System.Linq;
-using System.Threading;
 using System.Web.Security;
-using LogMeIn.Models;
 using Xunit;
-using Xunit.Extensions;
 
-namespace LogMeIn.Tests.Integration.Raven.Membership
+namespace FlexProviders.Tests.Integration.Raven.Membership
 {
     public class CreateAccountTests : IntegrationTest
     {
