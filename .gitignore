@@ -5,6 +5,8 @@ build/
 [Bb]in/
 [Oo]bj/
 *.suo
+*.mdf
+*.ldf
 *.sln.cache
 _ReSharper.*/
 *.resharper

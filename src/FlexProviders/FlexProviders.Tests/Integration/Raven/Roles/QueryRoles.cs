@@ -1,6 +1,4 @@
-using LogMeIn.Models;
 using Xunit;
-using Xunit.Extensions;
 
 namespace LogMeIn.Tests.Integration.Raven.Roles
 {
