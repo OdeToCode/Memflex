@@ -6,7 +6,7 @@ namespace FlexProviders.Tests.Integration.EF.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
         }
     }
 }

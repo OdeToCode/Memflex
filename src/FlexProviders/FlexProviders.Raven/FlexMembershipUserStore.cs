@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using FlexProviders.Membership;
@@ -46,9 +46,7 @@ namespace FlexProviders.Raven
         public bool DeleteOAuthAccount(string provider, string providerUserId)
         {
             var user =
-                _session.Query<TUser>()
-                        .SingleOrDefault(u => u.OAuthAccounts
-                          .Any(o => o.ProviderUserId == providerUserId && o.Provider == provider));
+                _session.Query<TUser>().SingleOrDefault(u => u.OAuthAccounts.Any(o => o.ProviderUserId == providerUserId && o.Provider == provider));
             
             if(user != null)
             {
@@ -67,8 +65,7 @@ namespace FlexProviders.Raven
         public IFlexMembershipUser GetUserByOAuthProvider(string provider, string providerUserId)
         {
             return
-                _session.Query<TUser>().SingleOrDefault(
-                    u => u.OAuthAccounts.Any(r => r.Provider == provider && r.ProviderUserId == providerUserId));
+                _session.Query<TUser>().SingleOrDefault(u => u.OAuthAccounts.Any(r => r.Provider == provider && r.ProviderUserId == providerUserId));
         }
 
         public IFlexMembershipUser CreateOAuthAccount(string provider, string providerUserId, string username)
@@ -76,10 +73,10 @@ namespace FlexProviders.Raven
             var user = _session.Query<TUser>().SingleOrDefault(u => u.Username == username);
             if(user == null)
             {
-                user = new TUser() {Username = username};   
+                user = new TUser {Username = username};   
                 _session.Store(user);
             }
-            var account = new FlexOAuthAccount() {Provider = provider, ProviderUserId = providerUserId};
+            var account = new FlexOAuthAccount {Provider = provider, ProviderUserId = providerUserId};
             if (user.OAuthAccounts == null)
             {
                 user.OAuthAccounts = new Collection<FlexOAuthAccount>();
@@ -93,21 +90,24 @@ namespace FlexProviders.Raven
 
         public IEnumerable<OAuthAccount> GetOAuthAccountsForUser(string username)
         {
-            throw new System.NotImplementedException();
+            return _session
+                .Query<TUser>()
+                .Single(u => u.Username == username)
+                .OAuthAccounts
+                .ToArray()
+                .Select(o => new OAuthAccount(o.Provider, o.ProviderUserId));
         }
 
         public void CreateRole(string roleName)
         {
-            var role = new TRole();
-            role.Name = roleName;
-           _session.Store(role);
+            var role = new TRole {Name = roleName};
+            _session.Store(role);
             _session.SaveChanges();
         }
 
         public string[] GetRolesForUser(string username)
         {
-            return _session.Query<TRole>()
-                           .Where(r => r.Users.Any(name => name == username))
+            return _session.Query<TRole>().Where(r => r.Users.Any(name => name == username))
                            .Select(r => r.Name).ToArray();
         }
 
@@ -124,11 +124,6 @@ namespace FlexProviders.Raven
         public string[] GetAllRoles()
         {
             return _session.Query<TRole>().Select(r => r.Name).ToArray();
-        }
-
-        public string[] FindUsersInRole(string roleName, string usernameToMatch)
-        {
-            throw new System.NotImplementedException();
         }
 
         public void RemoveUsersFromRoles(string[] usernames, string[] roleNames)

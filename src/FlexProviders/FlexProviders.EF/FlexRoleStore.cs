@@ -1,8 +1,8 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.Data.Entity;
+using System.Linq;
 using FlexProviders.Membership;
 using FlexProviders.Roles;
-using System.Linq;
 
 namespace FlexProviders.EF
 {
@@ -26,17 +26,14 @@ namespace FlexProviders.EF
 
         public string[] GetRolesForUser(string username)
         {
-            return _context.Set<TRole>()
-                           .Where(role => role.Users.Any(u => u.Username.Equals(username)))
+            return _context.Set<TRole>().Where(role => role.Users.Any(u => u.Username.Equals(username)))
                            .Select(role => role.Name).ToArray();
         }
 
         public string[] GetUsersInRole(string roleName)
         {
-            return _context.Set<TRole>()
-                           .Where(role => role.Name.Equals(roleName))
-                           .SelectMany(role => role.Users)
-                           .Select(user => user.Username)
+            return _context.Set<TRole>().Where(role => role.Name.Equals(roleName))
+                .SelectMany(role => role.Users).Select(user => user.Username)
                            .ToArray();
 
         }
@@ -48,11 +45,8 @@ namespace FlexProviders.EF
 
         public string[] FindUsersInRole(string roleName, string usernameToMatch)
         {
-            return _context.Set<TRole>()
-                          .Where(role => role.Name.Equals(roleName))
-                          .SelectMany(role => role.Users)
-                          .Where(user => user.Username.StartsWith(usernameToMatch))
-                          .Select(user => user.Username)
+            return _context.Set<TRole>().Where(role => role.Name.Equals(roleName))
+                .SelectMany(role => role.Users).Where(user => user.Username.StartsWith(usernameToMatch)).Select(user => user.Username)
                           .ToArray();
         }
 

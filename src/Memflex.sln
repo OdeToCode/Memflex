@@ -20,6 +20,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlexProviders", "FlexProvid
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlexProviders.Tests", "FlexProviders\FlexProviders.Tests\FlexProviders.Tests.csproj", "{DDC3DA05-09D0-4D77-98C6-8CEA5ED4099A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlexProviders.EF", "FlexProviders\FlexProviders.EF\FlexProviders.EF.csproj", "{DA1790E9-FB2A-4CE1-B588-29EFCCE52CE1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlexProviders.Raven", "FlexProviders\FlexProviders.Raven\FlexProviders.Raven.csproj", "{4FD928E5-C291-4D5F-93CD-BEE69B185358}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +42,14 @@ Global
 		{DDC3DA05-09D0-4D77-98C6-8CEA5ED4099A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DDC3DA05-09D0-4D77-98C6-8CEA5ED4099A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DDC3DA05-09D0-4D77-98C6-8CEA5ED4099A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA1790E9-FB2A-4CE1-B588-29EFCCE52CE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA1790E9-FB2A-4CE1-B588-29EFCCE52CE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA1790E9-FB2A-4CE1-B588-29EFCCE52CE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA1790E9-FB2A-4CE1-B588-29EFCCE52CE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FD928E5-C291-4D5F-93CD-BEE69B185358}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FD928E5-C291-4D5F-93CD-BEE69B185358}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FD928E5-C291-4D5F-93CD-BEE69B185358}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FD928E5-C291-4D5F-93CD-BEE69B185358}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

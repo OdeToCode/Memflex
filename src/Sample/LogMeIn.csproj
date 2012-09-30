@@ -327,6 +327,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FlexProviders\FlexProviders.EF\FlexProviders.EF.csproj">
+      <Project>{DA1790E9-FB2A-4CE1-B588-29EFCCE52CE1}</Project>
+      <Name>FlexProviders.EF</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FlexProviders\FlexProviders\FlexProviders.csproj">
       <Project>{9c987907-bd64-4100-89d4-f4bcfb77768b}</Project>
       <Name>FlexProviders</Name>

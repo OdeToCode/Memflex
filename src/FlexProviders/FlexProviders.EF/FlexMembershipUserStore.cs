@@ -1,4 +1,3 @@
-﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
@@ -42,14 +41,13 @@ namespace FlexProviders.EF
         public IFlexMembershipUser CreateOAuthAccount(string provider, string providerUserId, string username)
         {
             var users = _context.Set<TUser>();
-            var user = users.Include(u => u.OAuthAccounts)
-                            .SingleOrDefault(u => u.Username == username);
+            var user = users.Include(u => u.OAuthAccounts).SingleOrDefault(u => u.Username == username);
             if (user == null)
             {
                 user = new TUser { Username = username };
                 users.Add(user);
             }
-            var account = new FlexOAuthAccount() { Provider = provider, ProviderUserId = providerUserId };
+            var account = new FlexOAuthAccount { Provider = provider, ProviderUserId = providerUserId };
             if(user.OAuthAccounts == null)
             {
                 user.OAuthAccounts = new Collection<FlexOAuthAccount>();
@@ -62,14 +60,13 @@ namespace FlexProviders.EF
 
         public IFlexMembershipUser GetUserByOAuthProvider(string provider, string providerUserId)
         {
-            var user = _context.Set<TUser>()
-                               .SingleOrDefault(u => u.OAuthAccounts.Any(a => a.Provider == provider && a.ProviderUserId == providerUserId));
+            var user = _context.Set<TUser>().SingleOrDefault(u => u.OAuthAccounts.Any(a => a.Provider == provider && a.ProviderUserId == providerUserId));
             return user;
         }
 
         public bool DeleteOAuthAccount(string provider, string providerUserId)
         {
-            var user = _context.Set<TUser>().SingleOrDefault(u => u.OAuthAccounts.Any(a => a.Provider == provider && a.ProviderUserId == providerUserId));
+            var user = _context.Set<TUser>().Single(u => u.OAuthAccounts.Any(a => a.Provider == provider && a.ProviderUserId == providerUserId));
             if (user.IsLocal || user.OAuthAccounts.Count > 1)
             {
                 var account = user.OAuthAccounts.Single(a => a.Provider == provider && a.ProviderUserId == providerUserId);

@@ -242,7 +242,7 @@ namespace LogMeIn.Controllers
             string provider = null;
             string providerUserId = null;
 
-            if (User.Identity.IsAuthenticated || !_encoder.TryDeserializeOAuthProviderUserID(model.ExternalLoginData, out provider, out providerUserId))
+            if (User.Identity.IsAuthenticated || !_encoder.TryDeserializeOAuthProviderUserId(model.ExternalLoginData, out provider, out providerUserId))
             {
                 return RedirectToAction("Manage");
             }

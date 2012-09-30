@@ -1,6 +1,5 @@
 using System.Web.Mvc;
 using FlexProviders.Aspnet;
-using FlexProviders.EF;
 using FlexProviders.Membership;
 using FlexProviders.Roles;
 using LogMeIn.Models;

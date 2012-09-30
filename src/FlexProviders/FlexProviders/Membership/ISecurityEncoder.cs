@@ -11,7 +11,7 @@ namespace FlexProviders.Membership
         string GenerateSalt();
         string Encode(string plainText, string salt);
         string SerializeOAuthProviderUserId(string providerName, string providerUserId);
-        bool TryDeserializeOAuthProviderUserID(string protectedData, out string providerName, out string providerUserId);
+        bool TryDeserializeOAuthProviderUserId(string protectedData, out string providerName, out string providerUserId);
     }
 
     public class DefaultSecurityEncoder : ISecurityEncoder
@@ -36,7 +36,7 @@ namespace FlexProviders.Membership
             }
         }
 
-        public bool TryDeserializeOAuthProviderUserID(string protectedData, out string providerName, out string providerUserId)
+        public bool TryDeserializeOAuthProviderUserId(string protectedData, out string providerName, out string providerUserId)
         {
             providerName = null;
             providerUserId = null;
