@@ -24,5 +24,15 @@ namespace FlexProviders.Tests.Integration.Raven.OAuth
 
             Assert.False(result);
         }
+
+        [Fact]
+        public void Does_Not_Leave_Orphan_Records()
+        {
+            MembershipProvider.CreateOAuthAccount("Microsoft", "bitmask", "sallen");
+            MembershipProvider.CreateOAuthAccount("Google", "bitmask", "sallen");
+            MembershipProvider.DissassociateOAuthAccount("Google", "bitmask");
+
+            Assert.DoesNotThrow(() => MembershipProvider.CreateOAuthAccount("Google", "bitmask", "sallen"));
+        }
     }
 }

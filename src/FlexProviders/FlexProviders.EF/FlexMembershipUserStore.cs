@@ -70,7 +70,7 @@ namespace FlexProviders.EF
             if (user.IsLocal || user.OAuthAccounts.Count > 1)
             {
                 var account = user.OAuthAccounts.Single(a => a.Provider == provider && a.ProviderUserId == providerUserId);
-                user.OAuthAccounts.Remove(account);
+                _context.Set<FlexOAuthAccount>().Remove(account);
                 _context.SaveChanges();
                 return true;
             }
