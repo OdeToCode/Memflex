@@ -9,8 +9,8 @@ namespace FlexProviders.Tests.Integration.EF.OAuth
         [AutoRollback]
         public void Can_Delete_OAuthAccount()
         {
-            MembershipProvider.CreateOAuthAccount("Microsoft", "bitmask", "sallen");
-            MembershipProvider.CreateOAuthAccount("Google", "bitmask", "sallen");
+            MembershipProvider.CreateOAuthAccount("Microsoft", "bitmask", new User { Username = "sallen" });
+            MembershipProvider.CreateOAuthAccount("Google", "bitmask", new User { Username = "sallen" });
 
             var result = MembershipProvider.DissassociateOAuthAccount("Google", "bitmask");
 
@@ -20,8 +20,8 @@ namespace FlexProviders.Tests.Integration.EF.OAuth
         [Fact]
         [AutoRollback]
         public void Can_Not_Delete_Last_Account()
-        {        
-            MembershipProvider.CreateOAuthAccount("Google", "bitmask", "sallen");
+        {
+            MembershipProvider.CreateOAuthAccount("Google", "bitmask", new User { Username = "sallen" });
 
             var result = MembershipProvider.DissassociateOAuthAccount("Google", "bitmask");
 
@@ -32,11 +32,11 @@ namespace FlexProviders.Tests.Integration.EF.OAuth
         [AutoRollback]
         public void Does_Not_Leave_Orphan_Records()
         {
-            MembershipProvider.CreateOAuthAccount("Microsoft", "bitmask", "sallen");
-            MembershipProvider.CreateOAuthAccount("Google", "bitmask", "sallen");
+            MembershipProvider.CreateOAuthAccount("Microsoft", "bitmask", new User { Username = "sallen" });
+            MembershipProvider.CreateOAuthAccount("Google", "bitmask", new User { Username = "sallen" });
             MembershipProvider.DissassociateOAuthAccount("Google", "bitmask");
-            
-            Assert.DoesNotThrow(() => MembershipProvider.CreateOAuthAccount("Google", "bitmask", "sallen"));                
+
+            Assert.DoesNotThrow(() => MembershipProvider.CreateOAuthAccount("Google", "bitmask", new User { Username = "sallen" }));                
         }
 
     }

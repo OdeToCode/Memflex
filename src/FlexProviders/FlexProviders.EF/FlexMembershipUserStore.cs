@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Objects.DataClasses;
 using System.Linq;
 using FlexProviders.Membership;
 using Microsoft.Web.WebPages.OAuth;
@@ -38,23 +38,15 @@ namespace FlexProviders.EF
            return user;
         }
 
-        public IFlexMembershipUser CreateOAuthAccount(string provider, string providerUserId, string username)
+        public IFlexMembershipUser CreateOAuthAccount(string provider, string providerUserId, IFlexMembershipUser user)
         {
-            var users = _context.Set<TUser>();
-            var user = users.Include(u => u.OAuthAccounts).SingleOrDefault(u => u.Username == username);
-            if (user == null)
-            {
-                user = new TUser { Username = username };
-                users.Add(user);
-            }
-            var account = new FlexOAuthAccount { Provider = provider, ProviderUserId = providerUserId };
+            user = _context.Set<TUser>().Single(u => u.Username == user.Username);
             if(user.OAuthAccounts == null)
             {
-                user.OAuthAccounts = new Collection<FlexOAuthAccount>();
+                user.OAuthAccounts = new EntityCollection<FlexOAuthAccount>();
             }
-            user.OAuthAccounts.Add(account);
+            user.OAuthAccounts.Add(new FlexOAuthAccount() { Provider = provider, ProviderUserId = providerUserId});
             _context.SaveChanges();
-
             return user;
         }
 
@@ -65,15 +57,14 @@ namespace FlexProviders.EF
         }
 
         public bool DeleteOAuthAccount(string provider, string providerUserId)
-        {
-            var user = _context.Set<TUser>().Single(u => u.OAuthAccounts.Any(a => a.Provider == provider && a.ProviderUserId == providerUserId));
-            if (user.IsLocal || user.OAuthAccounts.Count > 1)
+        {            
+            var account = _context.Set<FlexOAuthAccount>().Find(provider, providerUserId);
+            if(account != null)
             {
-                var account = user.OAuthAccounts.Single(a => a.Provider == provider && a.ProviderUserId == providerUserId);
                 _context.Set<FlexOAuthAccount>().Remove(account);
                 _context.SaveChanges();
                 return true;
-            }
+            }            
             return false;
         }
 

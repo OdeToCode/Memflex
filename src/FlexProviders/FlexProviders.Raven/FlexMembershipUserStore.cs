@@ -46,19 +46,18 @@ namespace FlexProviders.Raven
         public bool DeleteOAuthAccount(string provider, string providerUserId)
         {
             var user =
-                _session.Query<TUser>().SingleOrDefault(u => u.OAuthAccounts.Any(o => o.ProviderUserId == providerUserId && o.Provider == provider));
+                _session.Query<TUser>()
+                        .SingleOrDefault(u => u.OAuthAccounts
+                                               .Any(o => o.ProviderUserId == providerUserId && o.Provider == provider));
             
             if(user != null)
             {
-                if (user.IsLocal || user.OAuthAccounts.Count() > 1)
-                {
-                    var account =
-                        user.OAuthAccounts.Single(o => o.Provider == provider && o.ProviderUserId == providerUserId);
-                    user.OAuthAccounts.Remove(account);
-                    _session.SaveChanges();
-                    return true;
-                }
-            }
+                var account =
+                    user.OAuthAccounts.Single(o => o.Provider == provider && o.ProviderUserId == providerUserId);
+                 user.OAuthAccounts.Remove(account);
+                _session.SaveChanges();
+                 return true;
+            }           
             return false;
         }
 
@@ -68,14 +67,8 @@ namespace FlexProviders.Raven
                 _session.Query<TUser>().SingleOrDefault(u => u.OAuthAccounts.Any(r => r.Provider == provider && r.ProviderUserId == providerUserId));
         }
 
-        public IFlexMembershipUser CreateOAuthAccount(string provider, string providerUserId, string username)
+        public IFlexMembershipUser CreateOAuthAccount(string provider, string providerUserId, IFlexMembershipUser user)
         {
-            var user = _session.Query<TUser>().SingleOrDefault(u => u.Username == username);
-            if(user == null)
-            {
-                user = new TUser {Username = username};   
-                _session.Store(user);
-            }
             var account = new FlexOAuthAccount {Provider = provider, ProviderUserId = providerUserId};
             if (user.OAuthAccounts == null)
             {
@@ -85,7 +78,6 @@ namespace FlexProviders.Raven
             _session.SaveChanges();
 
             return user;
-
         }
 
         public IEnumerable<OAuthAccount> GetOAuthAccountsForUser(string username)

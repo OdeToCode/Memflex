@@ -9,7 +9,7 @@ namespace FlexProviders.Tests.Integration.EF.OAuth
         [AutoRollback]
         public void Can_Get_Username_Given_ProviderInfo()
         {
-            MembershipProvider.CreateOAuthAccount("Microsoft", "bitmask", "sallen");
+            MembershipProvider.CreateOAuthAccount("Microsoft", "bitmask", new User { Username = "sallen" });
 
             var name = MembershipProvider.GetUserNameFromOpenAuth("Microsoft", "bitmask");
 

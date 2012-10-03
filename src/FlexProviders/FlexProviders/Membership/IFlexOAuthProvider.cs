@@ -9,7 +9,7 @@ namespace FlexProviders.Membership
         bool OAuthLogin(string provider, string providerUserId, bool persistCookie);
         void RequestOAuthAuthentication(string provider, string returnUrl);
         AuthenticationResult VerifyOAuthAuthentication(string action);
-        void CreateOAuthAccount(string provider, string providerUserId, string username);
+        void CreateOAuthAccount(string provider, string providerUserId, IFlexMembershipUser user);
         bool DissassociateOAuthAccount(string provider, string providerUserId);
         AuthenticationClientData GetOAuthClientData(string provider);        
         ICollection<AuthenticationClientData> RegisteredClientData { get; }
