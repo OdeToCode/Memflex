@@ -218,7 +218,7 @@ namespace LogMeIn.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 // If the current user is logged in add the new account
-                _oAuthProvider.CreateOAuthAccount(result.Provider, result.ProviderUserId, User.Identity.Name);                
+                _oAuthProvider.CreateOAuthAccount(result.Provider, result.ProviderUserId, new User() { Username = User.Identity.Name });                
                 return RedirectToLocal(returnUrl);
             }
             else
@@ -251,7 +251,7 @@ namespace LogMeIn.Controllers
             {
                 if (!_membershipProvider.HasLocalAccount(model.UserName))
                 {
-                    _oAuthProvider.CreateOAuthAccount(provider, providerUserId, model.UserName);
+                    _oAuthProvider.CreateOAuthAccount(provider, providerUserId, new User { Username = model.UserName});
                    _oAuthProvider.OAuthLogin(provider, providerUserId, persistCookie: false);
 
                     return RedirectToLocal(returnUrl);

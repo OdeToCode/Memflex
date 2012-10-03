@@ -32,7 +32,7 @@ namespace FlexProviders.Tests.Integration.Raven
         {
             DocumentStore = new EmbeddableDocumentStore()
             {
-                RunInMemory = true                
+                RunInMemory = true , UseEmbeddedHttpServer = true               
             };
             DocumentStore.RegisterListener(new NoStaleQueries());
             DocumentStore.Initialize();

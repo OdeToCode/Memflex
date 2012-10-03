@@ -9,19 +9,19 @@ namespace FlexProviders.Tests.Integration.EF.OAuth
         [AutoRollback]
         public void Can_Create_OAuth_Account()
         {
-            MembershipProvider.CreateOAuthAccount("Microsoft", "bitmask", "sallen");
+            MembershipProvider.CreateOAuthAccount("Microsoft", "bitmask", new User { Username = "sallen" });
 
-            Assert.True(_db.GetCountOfOAuthAccounts("sallen") == 1);
+            Assert.Equal(1, _db.GetCountOfOAuthAccounts("sallen"));
         }
 
         [Fact]
         [AutoRollback]
         public void Can_Update_OAuth_Account()
         {
-            MembershipProvider.CreateOAuthAccount("Microsoft", "bitmask", "sallen");
-            MembershipProvider.CreateOAuthAccount("Yahoo", "bitmask", "sallen");
+            MembershipProvider.CreateOAuthAccount("Microsoft", "bitmask", new User { Username = "sallen" });
+            MembershipProvider.CreateOAuthAccount("Yahoo", "bitmask", new User { Username = "sallen" });
 
-            Assert.True(_db.GetCountOfOAuthAccounts("sallen") == 2);
+            Assert.Equal(2, _db.GetCountOfOAuthAccounts("sallen"));
         }
     }
 }

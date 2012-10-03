@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Security;
 using DotNetOpenAuth.AspNet;
 using Microsoft.Web.WebPages.OAuth;
@@ -78,9 +79,15 @@ namespace FlexProviders.Membership
             return false;
         }
 
-        public void CreateOAuthAccount(string provider, string providerUserId, string username)
+        public void CreateOAuthAccount(string provider, string providerUserId, IFlexMembershipUser user)
         {
-            _userStore.CreateOAuthAccount(provider, providerUserId, username);
+            var existingUser = _userStore.GetUserByUsername(user.Username);
+            if(existingUser == null)
+            {
+                user.IsLocal = false;
+                _userStore.Add(user);
+            }
+            _userStore.CreateOAuthAccount(provider, providerUserId, existingUser ?? user);
         }
 
         public string GetUserNameFromOpenAuth(string provider, string providerUserId)
@@ -95,7 +102,21 @@ namespace FlexProviders.Membership
 
         public bool DissassociateOAuthAccount(string provider, string providerUserId)
         {
-            return _userStore.DeleteOAuthAccount(provider, providerUserId);
+            var user = _userStore.GetUserByOAuthProvider(provider, providerUserId);
+            if(user == null)
+            {
+                return false;
+            }
+            if(user.IsLocal)
+            {
+                return _userStore.DeleteOAuthAccount(provider, providerUserId);
+            }
+            var accounts = _userStore.GetOAuthAccountsForUser(user.Username);
+            if(accounts.Count() > 1)
+            {
+                return _userStore.DeleteOAuthAccount(provider, providerUserId);
+            }
+            return false;
         }
 
         public AuthenticationClientData GetOAuthClientData(string providerName)
