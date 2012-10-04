@@ -172,9 +172,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Raven.Studio.xap" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\FlexProviders.Raven\FlexProviders.Raven.csproj">
       <Project>{4fd928e5-c291-4d5f-93cd-bee69b185358}</Project>
       <Name>FlexProviders.Raven</Name>
