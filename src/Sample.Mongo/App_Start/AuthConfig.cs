@@ -20,13 +20,13 @@ namespace LogMeIn
             //              new MicrosoftClient("", ""), 
             //              "Microsoft", new Dictionary<string, object>());
 
-            FlexMembershipProvider.RegisterClient(
-                          new TwitterClient("AymmAe1LX7e70CKlr05rg", "8DFDctdQFjLv6snfsNVNgjKHCQtEiWaiyrdTz11I5H4"),
-                          "Twitter", new Dictionary<string, object>());
+            //FlexMembershipProvider.RegisterClient(
+            //              new TwitterClient("", ""),
+            //              "Twitter", new Dictionary<string, object>());
 
-            FlexMembershipProvider.RegisterClient(
-                new FacebookClient("109373722055", "1f33de42ceef0e6db3afbb45630897fe"),
-                "Facebook", new Dictionary<string, object>());
+            //FlexMembershipProvider.RegisterClient(
+            //    new FacebookClient("", ""),
+            //    "Facebook", new Dictionary<string, object>());
 
             FlexMembershipProvider.RegisterClient(
                new GoogleOpenIdClient(),
