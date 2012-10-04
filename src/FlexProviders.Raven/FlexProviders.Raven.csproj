@@ -47,6 +47,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FlexProviders.Tests\FlexProviders.Tests.csproj">
+      <Project>{ddc3da05-09d0-4d77-98c6-8cea5ed4099a}</Project>
+      <Name>FlexProviders.Tests</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FlexProviders\FlexProviders.csproj">
       <Project>{9C987907-BD64-4100-89D4-F4BCFB77768B}</Project>
       <Name>FlexProviders</Name>

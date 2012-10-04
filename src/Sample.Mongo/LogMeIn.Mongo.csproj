@@ -338,7 +338,7 @@
       <Project>{30cb66d5-e44f-4727-9e81-e77e0385fe0c}</Project>
       <Name>FlexProviders.Mongo</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FlexProviders\FlexProviders\FlexProviders.csproj">
+    <ProjectReference Include="..\FlexProviders\FlexProviders.csproj">
       <Project>{9c987907-bd64-4100-89d4-f4bcfb77768b}</Project>
       <Name>FlexProviders</Name>
     </ProjectReference>

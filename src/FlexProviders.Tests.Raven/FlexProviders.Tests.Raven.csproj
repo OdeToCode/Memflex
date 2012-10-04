@@ -172,21 +172,21 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FlexProviders\FlexProviders.Raven\FlexProviders.Raven.csproj">
+    <Content Include="Raven.Studio.xap" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FlexProviders.Raven\FlexProviders.Raven.csproj">
       <Project>{4fd928e5-c291-4d5f-93cd-bee69b185358}</Project>
       <Name>FlexProviders.Raven</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FlexProviders\FlexProviders.Tests\FlexProviders.Tests.csproj">
+    <ProjectReference Include="..\FlexProviders.Tests\FlexProviders.Tests.csproj">
       <Project>{ddc3da05-09d0-4d77-98c6-8cea5ed4099a}</Project>
       <Name>FlexProviders.Tests</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FlexProviders\FlexProviders\FlexProviders.csproj">
+    <ProjectReference Include="..\FlexProviders\FlexProviders.csproj">
       <Project>{9c987907-bd64-4100-89d4-f4bcfb77768b}</Project>
       <Name>FlexProviders</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Raven.Studio.xap" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
