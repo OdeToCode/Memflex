@@ -23,7 +23,7 @@ namespace FlexProviders.Membership
             _applicationEnvironment = applicationEnvironment;
         }
 
-        public bool Login(string username, string password)
+        public bool Login(string username, string password, bool rememberMe = false)
         {
             var user = _userStore.GetUserByUsername(username);
             if(user == null)
@@ -35,7 +35,7 @@ namespace FlexProviders.Membership
             var passed = encodedPassword.Equals(user.Password);
             if (passed)
             {
-                _applicationEnvironment.IssueAuthTicket(username, true);
+                _applicationEnvironment.IssueAuthTicket(username, rememberMe);
                 return true;
             }
             return false;
