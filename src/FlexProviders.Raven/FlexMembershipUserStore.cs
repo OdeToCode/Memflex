@@ -35,7 +35,7 @@ namespace FlexProviders.Raven
         public IFlexMembershipUser Save(IFlexMembershipUser user)
         {
             var existingUser = _session.Query<TUser>().SingleOrDefault(u => u.Username == user.Username);
-            foreach(var property in user.GetType().GetProperties().Where(p=>p.CanWrite))
+            foreach(var property in user.GetType().GetProperties().Where(p => p.CanWrite))
             {
                 property.SetValue(existingUser, property.GetValue(user));
             }
@@ -59,6 +59,12 @@ namespace FlexProviders.Raven
                  return true;
             }           
             return false;
+        }
+
+        public IFlexMembershipUser GetUserByPasswordResetToken(string passwordResetToken)
+        {
+            return
+                _session.Query<TUser>().SingleOrDefault(u => u.PasswordResetToken == passwordResetToken);
         }
 
         public IFlexMembershipUser GetUserByOAuthProvider(string provider, string providerUserId)

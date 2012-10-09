@@ -113,7 +113,8 @@ namespace LogMeIn.Controllers {
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Manage(LocalPasswordModel model) {
+        public ActionResult Manage(LocalPasswordModel model)
+        {
             bool hasLocalAccount = _membershipProvider.HasLocalAccount(User.Identity.Name);
             ViewBag.HasLocalPassword = hasLocalAccount;
             ViewBag.ReturnUrl = Url.Action("Manage");
@@ -143,13 +144,67 @@ namespace LogMeIn.Controllers {
 
                 if (ModelState.IsValid) {
                     try {
-                        var user = new User() { Username = User.Identity.Name, Password = model.NewPassword };
-                        _membershipProvider.CreateAccount(user);
+                        _membershipProvider.SetLocalPassword(User.Identity.Name, model.NewPassword);
                         return RedirectToAction("Manage", new { Message = ManageMessageId.SetPasswordSuccess });
                     } catch (Exception e) {
                         ModelState.AddModelError("", e);
                     }
                 }
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        //
+        // GET: /Account/ForgotPassword
+
+        [AllowAnonymous]
+        public ActionResult ForgotPassword() {
+            return View();
+        }
+
+        //
+        // POST: /Account/ForgotPassword
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult ForgotPassword(ForgotPasswordModel model) {
+            if (ModelState.IsValid) {
+                // Attempt to send the user a password email
+                string token = _membershipProvider.GeneratePasswordResetToken(model.UserName);
+                ViewBag.PasswordResetToken = token;
+                    
+                // TODO: Send the user an email with the password reset token.
+                return View();
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        //
+        // GET: /Account/ChangeForgottenPassword
+
+        [AllowAnonymous]
+        public ActionResult ChangeForgottenPassword() {
+            // TODO: Pull the password reset token out of the URL and put it into the model.
+            return View();
+        }
+
+        //
+        // POST: /Account/ChangeForgottenPassword
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult ChangeForgottenPassword(ChangeForgottenPasswordModel model) {
+            if (ModelState.IsValid) {
+                // Attempt to send the user a password email
+                _membershipProvider.ResetPassword(model.ResetPasswordToken, model.NewPassword);
+
+                return View();
             }
 
             // If we got this far, something failed, redisplay form
