@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Web;
 using System.Web.Security;
 using DotNetOpenAuth.AspNet;
 using Microsoft.Web.WebPages.OAuth;
@@ -11,6 +13,7 @@ namespace FlexProviders.Membership
                                            IFlexOAuthProvider,
                                            IOpenAuthDataProvider 
     {
+        private const int TokenSizeInBytes = 16;
         private readonly IFlexUserStore _userStore;
         private readonly IApplicationEnvironment _applicationEnvironment;
         private readonly ISecurityEncoder _encoder = new DefaultSecurityEncoder();
@@ -56,27 +59,80 @@ namespace FlexProviders.Membership
 
             user.Salt = user.Salt ?? _encoder.GenerateSalt();
             user.Password = _encoder.Encode(user.Password, user.Salt);
-            user.IsLocal = true;
             _userStore.Add(user);
+        }
+
+        public void UpdateAccount(IFlexMembershipUser user)
+        {
+            _userStore.Save(user);
         }
 
         public bool HasLocalAccount(string userName)
         {
             var user = _userStore.GetUserByUsername(userName);
-            return user != null && user.IsLocal;
+            return user != null && !String.IsNullOrEmpty(user.Password);
         }
 
         public bool ChangePassword(string username, string oldPassword, string newPassword)
         {
             var user = _userStore.GetUserByUsername(username);
             var encodedPassword = _encoder.Encode(oldPassword, user.Salt);
-            var flag = encodedPassword.Equals(user.Password);
-            if (flag)
-            {
-                user.Password = _encoder.Encode(newPassword, user.Salt);
-                _userStore.Save(user);
+            if (!encodedPassword.Equals(user.Password))
+                return false;
+
+            user.Password = _encoder.Encode(newPassword, user.Salt);
+            _userStore.Save(user);
+            return true;
+        }
+
+        public void SetLocalPassword(string username, string newPassword)
+        {
+            var user = _userStore.GetUserByUsername(username);
+            if (!String.IsNullOrEmpty(user.Password))
+                throw new InvalidOperationException("SetLocalPassword can only be used on accounts that currently don't have a local password.");
+
+            user.Salt = _encoder.GenerateSalt();
+            user.Password = _encoder.Encode(newPassword, user.Salt);
+            _userStore.Save(user);
+        }
+
+        public string GeneratePasswordResetToken(string username, int tokenExpirationInMinutesFromNow = 1440)
+        {
+            var user = _userStore.GetUserByUsername(username);
+            if (user == null)
+                throw new ArgumentException("User not found.", "username");
+
+            user.PasswordResetToken = GenerateToken();
+            user.PasswordResetTokenExpiration = DateTime.Now.AddMinutes(tokenExpirationInMinutesFromNow);
+            _userStore.Save(user);
+
+            return user.PasswordResetToken;
+        }
+
+        public bool ResetPassword(string passwordResetToken, string newPassword)
+        {
+            var user = _userStore.GetUserByPasswordResetToken(passwordResetToken);
+            if (user == null)
+                return false;
+
+            if (String.IsNullOrEmpty(user.Salt))
+                user.Salt = _encoder.GenerateSalt();
+            user.Password = _encoder.Encode(newPassword, user.Salt);
+            _userStore.Save(user);
+
+            return true;
+        }
+
+        private static string GenerateToken() {
+            using (var prng = new RNGCryptoServiceProvider()) {
+                return GenerateToken(prng);
             }
-            return false;
+        }
+
+        internal static string GenerateToken(RandomNumberGenerator generator) {
+            byte[] tokenBytes = new byte[TokenSizeInBytes];
+            generator.GetBytes(tokenBytes);
+            return HttpServerUtility.UrlTokenEncode(tokenBytes);
         }
 
         public void CreateOAuthAccount(string provider, string providerUserId, IFlexMembershipUser user)
@@ -84,7 +140,6 @@ namespace FlexProviders.Membership
             var existingUser = _userStore.GetUserByUsername(user.Username);
             if(existingUser == null)
             {
-                user.IsLocal = false;
                 _userStore.Add(user);
             }
             _userStore.CreateOAuthAccount(provider, providerUserId, existingUser ?? user);
@@ -106,10 +161,6 @@ namespace FlexProviders.Membership
             if(user == null)
             {
                 return false;
-            }
-            if(user.IsLocal)
-            {
-                return _userStore.DeleteOAuthAccount(provider, providerUserId);
             }
             var accounts = _userStore.GetOAuthAccountsForUser(user.Username);
             if(accounts.Count() > 1)

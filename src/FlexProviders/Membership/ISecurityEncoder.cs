@@ -123,6 +123,6 @@ namespace FlexProviders.Membership
             return Convert.ToBase64String(result);
         }
 
-        private static byte[] _padding = new byte[] { 0x85, 0xC5, 0x65, 0x72 };
+        private static readonly byte[] _padding = new byte[] { 0x85, 0xC5, 0x65, 0x72 };
     }
 }

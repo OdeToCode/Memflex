@@ -10,11 +10,13 @@ namespace FlexProviders.Tests.Security.Encryption
         public void Can_Hash_A_Password()
         {
             var encryptor = new DefaultSecurityEncoder();
+            string salt = encryptor.GenerateSalt();
+            var result1 = encryptor.Encode("plainText", salt);
+            var result2 = encryptor.Encode("plainText", salt);
 
-            var result = encryptor.Encode("plainText", "11111111");
-
-            Assert.False(String.IsNullOrEmpty(result));
-            Assert.NotEqual("plainText", result);
+            Assert.False(String.IsNullOrEmpty(result1));
+            Assert.NotEqual("plainText", result1);
+            Assert.Equal(result1, result2);
         }
     }
 }
