@@ -1,3 +1,4 @@
+using System;
 using Xunit;
 using Xunit.Extensions;
 
@@ -18,7 +19,7 @@ namespace FlexProviders.Tests.Integration.EF.Roles
         [AutoRollback]
         public void Can_Add_Users_To_Role()
         {
-            var user = new User {Username = "sallen", Password="123"};
+            var user = new User {Username = "sallen", Password="123", PasswordResetTokenExpiration = DateTime.Now};
             RoleProvider.CreateRole("admin");
             MembershipProvider.CreateAccount(user);
 

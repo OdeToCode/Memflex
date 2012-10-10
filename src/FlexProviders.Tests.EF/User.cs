@@ -6,6 +6,11 @@ namespace FlexProviders.Tests.Integration.EF
 {
     public class User : IFlexMembershipUser
     {
+        public User()
+        {
+            PasswordResetTokenExpiration = DateTime.Now;
+        }
+
         public int Id { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
