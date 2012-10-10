@@ -11,7 +11,7 @@ namespace FlexProviders.Raven
     public class FlexMembershipUserStore<TUser, TRole> 
         : IFlexUserStore, IFlexRoleStore
           where TUser : class,IFlexMembershipUser, new()
-          where TRole : class, IFlexRole<TUser>, new()
+          where TRole : class, IFlexRole<string>, new()
     {
         private readonly IDocumentSession _session;
 
