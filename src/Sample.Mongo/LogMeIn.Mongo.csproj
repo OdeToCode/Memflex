@@ -275,6 +275,8 @@
     <Content Include="Views\Home\Create.cshtml" />
     <Content Include="Views\Home\Edit.cshtml" />
     <Content Include="Views\Home\Delete.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\ChangeForgottenPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

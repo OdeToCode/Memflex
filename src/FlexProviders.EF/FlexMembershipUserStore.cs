@@ -68,6 +68,12 @@ namespace FlexProviders.EF
             return false;
         }
 
+        public IFlexMembershipUser GetUserByPasswordResetToken(string passwordResetToken)
+        {
+            var user = _context.Set<TUser>().SingleOrDefault(u => u.PasswordResetToken == passwordResetToken);
+            return user;
+        }
+
         public IEnumerable<OAuthAccount> GetOAuthAccountsForUser(string username)
         {
             var user = _context.Set<TUser>().Single(u => u.Username == username);

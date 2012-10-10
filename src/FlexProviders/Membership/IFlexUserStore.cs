@@ -12,5 +12,6 @@ namespace FlexProviders.Membership
         IFlexMembershipUser GetUserByOAuthProvider(string provider, string providerUserId);        
         IEnumerable<OAuthAccount> GetOAuthAccountsForUser(string username);
         bool DeleteOAuthAccount(string provider, string providerUserId);
+        IFlexMembershipUser GetUserByPasswordResetToken(string passwordResetToken);
     }    
 }

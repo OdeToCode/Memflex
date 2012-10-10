@@ -102,7 +102,7 @@ namespace FlexProviders.Mongo
                 user.OAuthAccounts = new Collection<FlexOAuthAccount>();
             }
             user.OAuthAccounts.Add(account);
-            _userCollection.Save(account);
+            _userCollection.Save(user);
 
             return user;
         }
@@ -136,7 +136,7 @@ namespace FlexProviders.Mongo
 
             if (user != null)
             {
-                if (user.IsLocal || user.OAuthAccounts.Count() > 1)
+                if (user.OAuthAccounts.Count() > 1)
                 {
                     FlexOAuthAccount account =
                         user.OAuthAccounts.Single(o => o.Provider == provider && o.ProviderUserId == providerUserId);
@@ -146,6 +146,11 @@ namespace FlexProviders.Mongo
                 }
             }
             return false;
+        }
+
+        public IFlexMembershipUser GetUserByPasswordResetToken(string passwordResetToken)
+        {
+            return _userCollection.AsQueryable().SingleOrDefault(u => u.PasswordResetToken == passwordResetToken);
         }
 
         public IFlexMembershipUser GetUserByOAuthProvider(string provider, string providerUserId)
