@@ -71,6 +71,7 @@
     <Compile Include="Membership\ISecurityEncoder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Roles\FlexRoleProvider.cs" />
+    <Compile Include="Roles\IFlexRole.cs" />
     <Compile Include="Roles\IFlexRoleProvider.cs" />
     <Compile Include="Roles\IFlexRoleStore.cs" />
   </ItemGroup>

@@ -10,7 +10,7 @@ namespace FlexProviders.Tests.Integration.Raven.OAuth
             MembershipProvider.CreateOAuthAccount("Microsoft", "bitmask", new User { Username = "sallen"});
             MembershipProvider.CreateOAuthAccount("Google", "bitmask", new User { Username = "sallen"});
 
-            var result = MembershipProvider.DissassociateOAuthAccount("Google", "bitmask");
+            var result = MembershipProvider.DisassociateOAuthAccount("Google", "bitmask");
 
             Assert.True(result);
         }
@@ -20,7 +20,7 @@ namespace FlexProviders.Tests.Integration.Raven.OAuth
         {
             MembershipProvider.CreateOAuthAccount("Google", "bitmask", new User { Username = "sallen" });
 
-            var result = MembershipProvider.DissassociateOAuthAccount("Google", "bitmask");
+            var result = MembershipProvider.DisassociateOAuthAccount("Google", "bitmask");
 
             Assert.False(result);
         }
@@ -30,7 +30,7 @@ namespace FlexProviders.Tests.Integration.Raven.OAuth
         {
             MembershipProvider.CreateOAuthAccount("Microsoft", "bitmask", new User { Username = "sallen" });
             MembershipProvider.CreateOAuthAccount("Google", "bitmask", new User { Username = "sallen" });
-            MembershipProvider.DissassociateOAuthAccount("Google", "bitmask");
+            MembershipProvider.DisassociateOAuthAccount("Google", "bitmask");
 
             Assert.DoesNotThrow(() => MembershipProvider.CreateOAuthAccount("Google", "bitmask", new User { Username = "sallen" }));
         }

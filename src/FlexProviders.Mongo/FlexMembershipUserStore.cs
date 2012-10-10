@@ -13,7 +13,7 @@ namespace FlexProviders.Mongo
 {
     public class FlexMembershipUserStore<TUser, TRole> : IFlexUserStore, IFlexRoleStore
         where TUser : class, IFlexMembershipUser, new()
-        where TRole : class, IFlexRole, new()
+        where TRole : class, IFlexRole<string>, new()
     {
         private readonly MongoCollection<TRole> _roleCollection;
         private readonly MongoCollection<TUser> _userCollection;

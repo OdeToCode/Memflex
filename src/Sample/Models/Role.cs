@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using FlexProviders.EF;
+using FlexProviders.Roles;
 
 namespace LogMeIn.Models
 {
