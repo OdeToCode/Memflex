@@ -54,7 +54,7 @@ namespace FlexProviders.Membership
             var existingUser = _userStore.GetUserByUsername(user.Username);
             if (existingUser != null)
             {
-                throw new MembershipCreateUserException("Cannot register with a duplicate username");
+                throw new FlexMembershipException(FlexMembershipStatus.DuplicateUserName);
             }
 
             user.Salt = user.Salt ?? _encoder.GenerateSalt();
@@ -89,7 +89,9 @@ namespace FlexProviders.Membership
         {
             var user = _userStore.GetUserByUsername(username);
             if (!String.IsNullOrEmpty(user.Password))
-                throw new InvalidOperationException("SetLocalPassword can only be used on accounts that currently don't have a local password.");
+            {
+                throw new FlexMembershipException("SetLocalPassword can only be used on accounts that currently don't have a local password.");
+            }
 
             user.Salt = _encoder.GenerateSalt();
             user.Password = _encoder.Encode(newPassword, user.Salt);
@@ -100,7 +102,9 @@ namespace FlexProviders.Membership
         {
             var user = _userStore.GetUserByUsername(username);
             if (user == null)
-                throw new ArgumentException("User not found.", "username");
+            {
+                throw new FlexMembershipException(FlexMembershipStatus.InvalidUserName);
+            }
 
             user.PasswordResetToken = GenerateToken();
             user.PasswordResetTokenExpiration = DateTime.Now.AddMinutes(tokenExpirationInMinutesFromNow);
