@@ -104,7 +104,7 @@ namespace LogMeIn.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Disassociate(string provider, string providerUserId)
         {
-            _oAuthProvider.DissassociateOAuthAccount(provider, providerUserId);
+            _oAuthProvider.DisassociateOAuthAccount(provider, providerUserId);
             return RedirectToAction("Manage", new { Message = "Complete" });
         }
 

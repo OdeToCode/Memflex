@@ -46,12 +46,12 @@ namespace FlexProviders.Membership
         void CreateOAuthAccount(string provider, string providerUserId, IFlexMembershipUser user);
 
         /// <summary>
-        ///   Dissassociates the OAuth account for a userid.
+        ///   Disassociates the OAuth account for a userid.
         /// </summary>
         /// <param name="provider"> The provider. </param>
         /// <param name="providerUserId"> The provider user id. </param>
         /// <returns> </returns>
-        bool DissassociateOAuthAccount(string provider, string providerUserId);
+        bool DisassociateOAuthAccount(string provider, string providerUserId);
 
         /// <summary>
         ///   Gets the OAuth client data for a provider

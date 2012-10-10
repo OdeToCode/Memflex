@@ -225,7 +225,7 @@ namespace FlexProviders.Membership
         /// <param name="provider"> The provider. </param>
         /// <param name="providerUserId"> The provider user id. </param>
         /// <returns> </returns>
-        public bool DissassociateOAuthAccount(string provider, string providerUserId)
+        public bool DisassociateOAuthAccount(string provider, string providerUserId)
         {
             IFlexMembershipUser user = _userStore.GetUserByOAuthProvider(provider, providerUserId);
             if (user == null)
