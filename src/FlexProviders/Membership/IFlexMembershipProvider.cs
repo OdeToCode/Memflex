@@ -2,7 +2,7 @@ namespace FlexProviders.Membership
 {
     public interface IFlexMembershipProvider
     {        
-        bool Login(string username, string password);
+        bool Login(string username, string password, bool rememberMe = false);
         void Logout();
         void CreateAccount(IFlexMembershipUser user);
         void UpdateAccount(IFlexMembershipUser user);

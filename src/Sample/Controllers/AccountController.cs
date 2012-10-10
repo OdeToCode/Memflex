@@ -41,7 +41,7 @@ namespace LogMeIn.Controllers
         public ActionResult Login(LoginModel model, string returnUrl)
         {
             // todo: remember me flag
-            if (ModelState.IsValid && _membershipProvider.Login(model.UserName, model.Password))
+            if (ModelState.IsValid && _membershipProvider.Login(model.UserName, model.Password, model.RememberMe))
             {
                 return RedirectToLocal(returnUrl);
             }
