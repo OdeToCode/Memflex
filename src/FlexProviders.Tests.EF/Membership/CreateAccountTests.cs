@@ -1,4 +1,4 @@
-using System.Web.Security;
+using FlexProviders.Membership;
 using Xunit;
 using Xunit.Extensions;
 
@@ -25,7 +25,7 @@ namespace FlexProviders.Tests.Integration.EF.Membership
 
             MembershipProvider.CreateAccount(user);
 
-            Assert.Throws<MembershipCreateUserException>(() => MembershipProvider.CreateAccount(user));
+            Assert.Throws<FlexMembershipException>(() => MembershipProvider.CreateAccount(user));
         }
 
         [Fact]

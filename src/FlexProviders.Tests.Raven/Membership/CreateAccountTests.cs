@@ -1,5 +1,5 @@
 using System.Linq;
-using System.Web.Security;
+using FlexProviders.Membership;
 using Xunit;
 
 namespace FlexProviders.Tests.Integration.Raven.Membership
@@ -26,7 +26,7 @@ namespace FlexProviders.Tests.Integration.Raven.Membership
 
             MembershipProvider.CreateAccount(user1);
              
-            Assert.Throws<MembershipCreateUserException>(() => MembershipProvider.CreateAccount(user2));
+            Assert.Throws<FlexMembershipException>(() => MembershipProvider.CreateAccount(user2));
         }
 
         [Fact]
