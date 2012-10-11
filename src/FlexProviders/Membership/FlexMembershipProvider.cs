@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Web;
-using System.Web.Security;
 using DotNetOpenAuth.AspNet;
 using Microsoft.Web.WebPages.OAuth;
 
@@ -84,7 +83,7 @@ namespace FlexProviders.Membership
             IFlexMembershipUser existingUser = _userStore.GetUserByUsername(user.Username);
             if (existingUser != null)
             {
-                throw new MembershipCreateUserException("Cannot register with a duplicate username");
+                throw new FlexMembershipException(FlexMembershipStatus.DuplicateUserName);
             }
 
             user.Salt = user.Salt ?? _encoder.GenerateSalt();
@@ -144,8 +143,7 @@ namespace FlexProviders.Membership
             IFlexMembershipUser user = _userStore.GetUserByUsername(username);
             if (!String.IsNullOrEmpty(user.Password))
             {
-                throw new InvalidOperationException(
-                    "SetLocalPassword can only be used on accounts that currently don't have a local password.");
+                throw new FlexMembershipException("SetLocalPassword can only be used on accounts that currently don't have a local password.");
             }
 
             user.Salt = _encoder.GenerateSalt();
@@ -164,7 +162,7 @@ namespace FlexProviders.Membership
             IFlexMembershipUser user = _userStore.GetUserByUsername(username);
             if (user == null)
             {
-                throw new ArgumentException("User not found.", "username");
+                throw new FlexMembershipException(FlexMembershipStatus.InvalidUserName);
             }
 
             user.PasswordResetToken = GenerateToken();
