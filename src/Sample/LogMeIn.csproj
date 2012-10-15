@@ -186,19 +186,15 @@
       <DependentUpon>201209221621381_Create.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\ManageMessageId.cs" />
     <Compile Include="Models\MovieDb.cs" />
     <Compile Include="Models\Movie.cs" />
     <Compile Include="Models\Role.cs" />
     <Compile Include="Models\RoleStore.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserStore.cs" />
-    <Compile Include="Security\IUserProfileManager.cs" />
-    <Compile Include="Security\IWebSecurity.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Security\ManageMessageId.cs" />
-    <Compile Include="Security\UserProfileManager.cs" />
-    <Compile Include="Security\WebMatrixSecurity.cs" />
     <Content Include="Views\Home\Details.cshtml" />
     <Content Include="Views\Home\Create.cshtml" />
     <Content Include="Views\Home\Edit.cshtml" />
@@ -353,9 +349,9 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerPort>3776</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:42791/</IISUrl>
+          <IISUrl>http://localhost:42793/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

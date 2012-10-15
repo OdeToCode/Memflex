@@ -16,10 +16,10 @@ namespace LogMeIn {
                                     });
                             x.For<IFilterProvider>().Use<SmFilterProvider>();
 
-                            x.For<IFlexMembershipProvider>().HybridHttpOrThreadLocalScoped().Use<FlexMembershipProvider>();
-                            x.For<IFlexRoleProvider>().HybridHttpOrThreadLocalScoped().Use<FlexRoleProvider>();
-                            x.For<IFlexUserStore>().HybridHttpOrThreadLocalScoped().Use<UserStore>();
-                            x.For<IFlexRoleStore>().HybridHttpOrThreadLocalScoped().Use<RoleStore>();
+                            x.For<IFlexMembershipProvider>().HttpContextScoped().Use<FlexMembershipProvider>();
+                            x.For<IFlexRoleProvider>().HttpContextScoped().Use<FlexRoleProvider>();
+                            x.For<IFlexUserStore>().HttpContextScoped().Use<UserStore>();
+                            x.For<IFlexRoleStore>().HttpContextScoped().Use<RoleStore>();
                             x.SetAllProperties(p => p.OfType<IFlexRoleProvider>());
                             x.Forward<IFlexMembershipProvider, IFlexOAuthProvider>();
 

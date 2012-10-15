@@ -9,7 +9,7 @@ using LogMeIn.Models;
 
 namespace LogMeIn.Controllers
 {
-    [Authorize]
+
     public class HomeController : Controller
     {
         private MovieDb db = new MovieDb();
