@@ -63,6 +63,7 @@
     <Compile Include="Aspnet\AspnetEnvironment.cs" />
     <Compile Include="Membership\FlexMembershipException.cs" />
     <Compile Include="Membership\FlexMembershipProvider.cs" />
+    <Compile Include="Membership\FlexMembershipStatus.cs" />
     <Compile Include="Membership\FlexOAuthAccount.cs" />
     <Compile Include="Membership\IApplicationEnvironment.cs" />
     <Compile Include="Membership\IFlexMembershipProvider.cs" />
