@@ -136,7 +136,7 @@ namespace FlexProviders.Mongo
 
             if (user != null)
             {
-                if (user.OAuthAccounts.Count() > 1)
+                if (user.OAuthAccounts.Count() > 1 || !string.IsNullOrEmpty(user.Password))
                 {
                     FlexOAuthAccount account =
                         user.OAuthAccounts.Single(o => o.Provider == provider && o.ProviderUserId == providerUserId);
