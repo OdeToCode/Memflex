@@ -231,10 +231,13 @@ namespace FlexProviders.Membership
                 return false;
             }
             IEnumerable<OAuthAccount> accounts = _userStore.GetOAuthAccountsForUser(user.Username);
-            if (accounts.Count() > 1)
-            {
+
+            if (HasLocalAccount(user.Username))
                 return _userStore.DeleteOAuthAccount(provider, providerUserId);
-            }
+
+            if (accounts.Count() > 1)
+                return _userStore.DeleteOAuthAccount(provider, providerUserId);
+
             return false;
         }
 
