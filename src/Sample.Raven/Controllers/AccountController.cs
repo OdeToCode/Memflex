@@ -265,7 +265,7 @@ namespace LogMeIn.Raven.Controllers {
             }
 
             if (ModelState.IsValid) {
-                if (!_membershipProvider.HasLocalAccount(model.UserName)) {
+                if (!_membershipProvider.Exists(model.UserName)) {
                     _oAuthProvider.CreateOAuthAccount(provider, providerUserId, new User { Username = model.UserName });
                     _oAuthProvider.OAuthLogin(provider, providerUserId, persistCookie: false);
 

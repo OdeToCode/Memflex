@@ -42,6 +42,13 @@ namespace FlexProviders.Membership
         bool HasLocalAccount(string username);
 
         /// <summary>
+        ///   Determines if a given username already exists
+        /// </summary>
+        /// <param name="username"> The username. </param>
+        /// <returns> <c>true</c> if the specified username exists; otherwise, <c>false</c> . </returns>
+        bool Exists(string username);
+
+        /// <summary>
         ///   Changes the password for a user
         /// </summary>
         /// <param name="username"> The username. </param>

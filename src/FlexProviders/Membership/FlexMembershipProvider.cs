@@ -112,6 +112,12 @@ namespace FlexProviders.Membership
             return user != null && !String.IsNullOrEmpty(user.Password);
         }
 
+        public bool Exists(string userName)
+        {
+            IFlexMembershipUser user = _userStore.GetUserByUsername(userName);
+            return user != null;
+        }
+
         /// <summary>
         ///   Changes the password for a user
         /// </summary>
