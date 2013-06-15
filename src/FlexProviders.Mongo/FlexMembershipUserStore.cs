@@ -11,7 +11,7 @@ using MongoDB.Driver.Linq;
 
 namespace FlexProviders.Mongo
 {
-    public class FlexMembershipUserStore<TUser, TRole> : IFlexUserStore, IFlexRoleStore
+    public class FlexMembershipUserStore<TUser, TRole> : IFlexUserStore<TUser>, IFlexRoleStore
         where TUser : class, IFlexMembershipUser, new()
         where TRole : class, IFlexRole<string>, new()
     {
@@ -94,7 +94,7 @@ namespace FlexProviders.Mongo
             return false;
         }
 
-        public IFlexMembershipUser CreateOAuthAccount(string provider, string providerUserId, IFlexMembershipUser user)
+        public TUser CreateOAuthAccount(string provider, string providerUserId, TUser user)
         {
             var account = new FlexOAuthAccount {Provider = provider, ProviderUserId = providerUserId};
             if (user.OAuthAccounts == null)
@@ -107,18 +107,18 @@ namespace FlexProviders.Mongo
             return user;
         }
 
-        public IFlexMembershipUser GetUserByUsername(string username)
+        public TUser GetUserByUsername(string username)
         {
             return _userCollection.AsQueryable().SingleOrDefault(u => u.Username == username);
         }
 
-        public IFlexMembershipUser Add(IFlexMembershipUser user)
+        public TUser Add(TUser user)
         {
             _userCollection.Save(user);
             return user;
         }
 
-        public IFlexMembershipUser Save(IFlexMembershipUser user)
+        public TUser Save(TUser user)
         {
             TUser existingUser = _userCollection.AsQueryable().SingleOrDefault(u => u.Username == user.Username);
             foreach (PropertyInfo property in user.GetType().GetProperties().Where(p => p.CanWrite))
@@ -148,12 +148,12 @@ namespace FlexProviders.Mongo
             return false;
         }
 
-        public IFlexMembershipUser GetUserByPasswordResetToken(string passwordResetToken)
+        public TUser GetUserByPasswordResetToken(string passwordResetToken)
         {
             return _userCollection.AsQueryable().SingleOrDefault(u => u.PasswordResetToken == passwordResetToken);
         }
 
-        public IFlexMembershipUser GetUserByOAuthProvider(string provider, string providerUserId)
+        public TUser GetUserByOAuthProvider(string provider, string providerUserId)
         {
             return
                 _userCollection.AsQueryable().SingleOrDefault(
@@ -168,7 +168,7 @@ namespace FlexProviders.Mongo
                 .Select(o => new OAuthAccount(o.Provider, o.ProviderUserId));
         }
 
-        public IFlexMembershipUser CreateOAuthAccount(string provider, string providerUserId, string username)
+        public TUser CreateOAuthAccount(string provider, string providerUserId, string username)
         {
             TUser user = _userCollection.AsQueryable().SingleOrDefault(u => u.Username == username);
             if (user == null)

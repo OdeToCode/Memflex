@@ -28,7 +28,7 @@ namespace LogMeIn
             //    new FacebookClient("", ""), 
             //    "Facebook", new Dictionary<string, object>() );
 
-            FlexMembershipProvider.RegisterClient(
+            FlexMembershipProvider<User>.RegisterClient(
                new GoogleOpenIdClient(),
                "Google", new Dictionary<string, object>());
         }

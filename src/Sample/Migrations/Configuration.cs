@@ -22,7 +22,7 @@ namespace LogMeIn.Migrations
             if (seed != "false")
             {
 
-                var membership = new FlexMembershipProvider(new UserStore(context), new AspnetEnvironment());
+                var membership = new FlexMembershipProvider<User>(new UserStore(context), new AspnetEnvironment());
                 var roles = new FlexRoleProvider(new RoleStore(context));
 
                 if (!membership.HasLocalAccount("sallen"))

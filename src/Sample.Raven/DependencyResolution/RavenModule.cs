@@ -42,7 +42,7 @@ namespace Laurelton.Web.Infrastructure.IoC
             {
                 var store = new FlexMembershipUserStore<User, Role>(s);
 
-                var membership = new FlexMembershipProvider(store, new AspnetEnvironment());
+                var membership = new FlexMembershipProvider<User>(store, new AspnetEnvironment());
                 var roles = new FlexRoleProvider(store);
                 if (!membership.HasLocalAccount("sallen"))
                 {

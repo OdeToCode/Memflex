@@ -4,7 +4,7 @@ using Microsoft.Web.WebPages.OAuth;
 
 namespace FlexProviders.Membership
 {
-    public interface IFlexOAuthProvider
+    public interface IFlexOAuthProvider<TUser> where TUser: IFlexMembershipUser
     {
         /// <summary>
         /// Gets the registered client data.
@@ -43,7 +43,7 @@ namespace FlexProviders.Membership
         /// <param name="provider"> The provider. </param>
         /// <param name="providerUserId"> The provider user id. </param>
         /// <param name="user"> The user. </param>
-        void CreateOAuthAccount(string provider, string providerUserId, IFlexMembershipUser user);
+        void CreateOAuthAccount(string provider, string providerUserId, TUser user);
 
         /// <summary>
         ///   Disassociates the OAuth account for a userid.

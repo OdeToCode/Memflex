@@ -1,6 +1,6 @@
 namespace FlexProviders.Membership
 {
-    public interface IFlexMembershipProvider
+    public interface IFlexMembershipProvider<TUser> where TUser: IFlexMembershipUser
     {
         /// <summary>
         /// Determines whether the provided <paramref name="username"/> and
@@ -25,13 +25,13 @@ namespace FlexProviders.Membership
         ///   Creates an account.
         /// </summary>
         /// <param name="user"> The user. </param>
-        void CreateAccount(IFlexMembershipUser user);
+        void CreateAccount(TUser user);
 
         /// <summary>
         ///   Updates the account.
         /// </summary>
         /// <param name="user"> The user. </param>
-        void UpdateAccount(IFlexMembershipUser user);
+        void UpdateAccount(TUser user);
 
         /// <summary>
         ///   Determines whether the specific <paramref name="username" /> has a

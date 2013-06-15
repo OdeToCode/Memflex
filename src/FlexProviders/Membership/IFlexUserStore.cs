@@ -3,15 +3,15 @@ using Microsoft.Web.WebPages.OAuth;
 
 namespace FlexProviders.Membership
 {
-    public interface IFlexUserStore
+    public interface IFlexUserStore<TUser> where TUser: IFlexMembershipUser
     {        
-        IFlexMembershipUser Add(IFlexMembershipUser user);        
-        IFlexMembershipUser Save(IFlexMembershipUser user);
-        IFlexMembershipUser CreateOAuthAccount(string provider, string providerUserId, IFlexMembershipUser user);        
-        IFlexMembershipUser GetUserByUsername(string username);
-        IFlexMembershipUser GetUserByOAuthProvider(string provider, string providerUserId);        
+        TUser Add(TUser user);        
+        TUser Save(TUser user);
+        TUser CreateOAuthAccount(string provider, string providerUserId, TUser user);        
+        TUser GetUserByUsername(string username);
+        TUser GetUserByOAuthProvider(string provider, string providerUserId);        
         IEnumerable<OAuthAccount> GetOAuthAccountsForUser(string username);
         bool DeleteOAuthAccount(string provider, string providerUserId);
-        IFlexMembershipUser GetUserByPasswordResetToken(string passwordResetToken);
+        TUser GetUserByPasswordResetToken(string passwordResetToken);
     }    
 }

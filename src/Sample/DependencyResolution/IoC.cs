@@ -16,12 +16,12 @@ namespace LogMeIn {
                                     });
                             x.For<IFilterProvider>().Use<SmFilterProvider>();
 
-                            x.For<IFlexMembershipProvider>().HttpContextScoped().Use<FlexMembershipProvider>();
+                            x.For<IFlexMembershipProvider<User>>().HttpContextScoped().Use<FlexMembershipProvider<User>>();
                             x.For<IFlexRoleProvider>().HttpContextScoped().Use<FlexRoleProvider>();
-                            x.For<IFlexUserStore>().HttpContextScoped().Use<UserStore>();
+                            x.For<IFlexUserStore<User>>().HttpContextScoped().Use<UserStore>();
                             x.For<IFlexRoleStore>().HttpContextScoped().Use<RoleStore>();
                             x.SetAllProperties(p => p.OfType<IFlexRoleProvider>());
-                            x.Forward<IFlexMembershipProvider, IFlexOAuthProvider>();
+                            x.Forward<IFlexMembershipProvider<User>, IFlexOAuthProvider<User>>();
 
                             x.For<IApplicationEnvironment>().Singleton().Use<AspnetEnvironment>();
                             x.For<ISecurityEncoder>().Singleton().Use<DefaultSecurityEncoder>();

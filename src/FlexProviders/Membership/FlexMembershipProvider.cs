@@ -8,9 +8,11 @@ using Microsoft.Web.WebPages.OAuth;
 
 namespace FlexProviders.Membership
 {
-    public class FlexMembershipProvider : IFlexMembershipProvider,
-                                          IFlexOAuthProvider,
-                                          IOpenAuthDataProvider
+    public class FlexMembershipProvider<TUser> : 
+        IFlexMembershipProvider<TUser>,
+        IFlexOAuthProvider<TUser>, 
+        IOpenAuthDataProvider
+        where TUser: class, IFlexMembershipUser
     {
         private const int TokenSizeInBytes = 16;
 
@@ -19,7 +21,7 @@ namespace FlexProviders.Membership
 
         private readonly IApplicationEnvironment _applicationEnvironment;
         private readonly ISecurityEncoder _encoder = new DefaultSecurityEncoder();
-        private readonly IFlexUserStore _userStore;
+        private readonly IFlexUserStore<TUser> _userStore;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FlexMembershipProvider" /> class.
@@ -27,7 +29,7 @@ namespace FlexProviders.Membership
         /// <param name="userStore">The user store.</param>
         /// <param name="applicationEnvironment">The application environment.</param>
         public FlexMembershipProvider(
-            IFlexUserStore userStore,
+            IFlexUserStore<TUser> userStore,
             IApplicationEnvironment applicationEnvironment)
         {
             _userStore = userStore;
@@ -78,7 +80,7 @@ namespace FlexProviders.Membership
         ///   Creates an account.
         /// </summary>
         /// <param name="user"> The user. </param>
-        public void CreateAccount(IFlexMembershipUser user)
+        public void CreateAccount(TUser user)
         {
             IFlexMembershipUser existingUser = _userStore.GetUserByUsername(user.Username);
             if (existingUser != null)
@@ -95,7 +97,7 @@ namespace FlexProviders.Membership
         ///   Updates the account.
         /// </summary>
         /// <param name="user"> The user. </param>
-        public void UpdateAccount(IFlexMembershipUser user)
+        public void UpdateAccount(TUser user)
         {
             _userStore.Save(user);
         }
@@ -127,7 +129,7 @@ namespace FlexProviders.Membership
         /// <returns> </returns>
         public bool ChangePassword(string username, string oldPassword, string newPassword)
         {
-            IFlexMembershipUser user = _userStore.GetUserByUsername(username);
+            TUser user = _userStore.GetUserByUsername(username);
             string encodedPassword = _encoder.Encode(oldPassword, user.Salt);
             if (!encodedPassword.Equals(user.Password))
             {
@@ -146,7 +148,7 @@ namespace FlexProviders.Membership
         /// <param name="newPassword"> The new password. </param>
         public void SetLocalPassword(string username, string newPassword)
         {
-            IFlexMembershipUser user = _userStore.GetUserByUsername(username);
+            TUser user = _userStore.GetUserByUsername(username);
             if (!String.IsNullOrEmpty(user.Password))
             {
                 throw new FlexMembershipException("SetLocalPassword can only be used on accounts that currently don't have a local password.");
@@ -165,7 +167,7 @@ namespace FlexProviders.Membership
         /// <returns> </returns>
         public string GeneratePasswordResetToken(string username, int tokenExpirationInMinutesFromNow = 1440)
         {
-            IFlexMembershipUser user = _userStore.GetUserByUsername(username);
+            TUser user = _userStore.GetUserByUsername(username);
             if (user == null)
             {
                 throw new FlexMembershipException(FlexMembershipStatus.InvalidUserName);
@@ -187,7 +189,7 @@ namespace FlexProviders.Membership
         /// <returns> </returns>
         public bool ResetPassword(string passwordResetToken, string newPassword)
         {
-            IFlexMembershipUser user = _userStore.GetUserByPasswordResetToken(passwordResetToken);
+            TUser user = _userStore.GetUserByPasswordResetToken(passwordResetToken);
             if (user == null)
             {
                 return false;
@@ -213,9 +215,9 @@ namespace FlexProviders.Membership
         /// <param name="provider"> The provider. </param>
         /// <param name="providerUserId"> The provider user id. </param>
         /// <param name="user"> The user. </param>
-        public void CreateOAuthAccount(string provider, string providerUserId, IFlexMembershipUser user)
+        public void CreateOAuthAccount(string provider, string providerUserId, TUser user)
         {
-            IFlexMembershipUser existingUser = _userStore.GetUserByUsername(user.Username);
+            TUser existingUser = _userStore.GetUserByUsername(user.Username);
             if (existingUser == null)
             {
                 _userStore.Add(user);

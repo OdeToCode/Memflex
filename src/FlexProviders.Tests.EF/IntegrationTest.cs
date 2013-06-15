@@ -5,7 +5,7 @@ namespace FlexProviders.Tests.Integration.EF
 {
     public class IntegrationTest
     {
-        protected readonly FlexMembershipProvider MembershipProvider;
+        protected readonly FlexMembershipProvider<User> MembershipProvider;
         protected readonly FakeApplicationEnvironment Environment;
         protected readonly UserStore UserStore;
         protected readonly RoleStore RoleStore;
@@ -21,7 +21,7 @@ namespace FlexProviders.Tests.Integration.EF
             RoleStore = new RoleStore(context);           
             Environment = new FakeApplicationEnvironment();
             RoleProvider = new FlexRoleProvider(RoleStore);
-            MembershipProvider = new FlexMembershipProvider(UserStore, Environment);
+            MembershipProvider = new FlexMembershipProvider<User>(UserStore, Environment);
         }
     }
 }

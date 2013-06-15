@@ -10,11 +10,11 @@ using Microsoft.Web.WebPages.OAuth;
 namespace LogMeIn.Raven.Controllers {
     [Authorize]
     public class AccountController : Controller {
-        private readonly IFlexMembershipProvider _membershipProvider;
-        private readonly IFlexOAuthProvider _oAuthProvider;
+        private readonly IFlexMembershipProvider<User> _membershipProvider;
+        private readonly IFlexOAuthProvider<User> _oAuthProvider;
         private readonly ISecurityEncoder _encoder = new DefaultSecurityEncoder();
 
-        public AccountController(IFlexMembershipProvider membership, IFlexOAuthProvider oauth) {
+        public AccountController(IFlexMembershipProvider<User> membership, IFlexOAuthProvider<User> oauth) {
             _membershipProvider = membership;
             _oAuthProvider = oauth;
         }
@@ -323,9 +323,9 @@ namespace LogMeIn.Raven.Controllers {
         }
 
         internal class ExternalLoginResult : ActionResult {
-            private IFlexOAuthProvider _oAuthProvider;
+            private IFlexOAuthProvider<User> _oAuthProvider;
 
-            public ExternalLoginResult(IFlexOAuthProvider oAuthProvider, string provider, string returnUrl) {
+            public ExternalLoginResult(IFlexOAuthProvider<User> oAuthProvider, string provider, string returnUrl) {
                 _oAuthProvider = oAuthProvider;
                 Provider = provider;
                 ReturnUrl = returnUrl;

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using DotNetOpenAuth.AspNet.Clients;
 using FlexProviders.Membership;
+using LogMeIn.Raven.Models;
 
 namespace LogMeIn.Raven
 {
@@ -25,7 +26,7 @@ namespace LogMeIn.Raven
 
             //OAuthWebSecurity.RegisterGoogleClient();
 
-            FlexMembershipProvider.RegisterClient(
+            FlexMembershipProvider<User>.RegisterClient(
                 new GoogleOpenIdClient(),
                 "Google", new Dictionary<string, object>());
         }

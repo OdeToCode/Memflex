@@ -55,12 +55,12 @@ namespace LogMeIn.Raven.App_Start
             kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
 
             kernel.Bind<IApplicationEnvironment>().To<AspnetEnvironment>();
-            kernel.Bind<IFlexMembershipProvider>().To<FlexMembershipProvider>();
+            kernel.Bind<IFlexMembershipProvider<User>>().To<FlexMembershipProvider<User>>();
             kernel.Bind<IFlexRoleProvider>().To<FlexRoleProvider>();
-            kernel.Bind<IFlexOAuthProvider>().To<FlexMembershipProvider>();
+            kernel.Bind<IFlexOAuthProvider<User>>().To<FlexMembershipProvider<User>>();
 
-            kernel.Bind<IFlexUserStore>().To<FlexMembershipUserStore<User, Role>>();
-            kernel.Bind<IFlexRoleStore>().ToMethod(c => (IFlexRoleStore)c.Kernel.Get<IFlexUserStore>());
+            kernel.Bind<IFlexUserStore<User>>().To<FlexMembershipUserStore<User, Role>>();
+            kernel.Bind<IFlexRoleStore>().ToMethod(c => (IFlexRoleStore)c.Kernel.Get<IFlexUserStore<User>>());
 
             RegisterServices(kernel);
             return kernel;

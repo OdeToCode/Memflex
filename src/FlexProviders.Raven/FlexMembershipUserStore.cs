@@ -9,7 +9,7 @@ using Raven.Client;
 namespace FlexProviders.Raven
 {
     public class FlexMembershipUserStore<TUser, TRole> 
-        : IFlexUserStore, IFlexRoleStore
+        : IFlexUserStore<TUser>, IFlexRoleStore
           where TUser : class,IFlexMembershipUser, new()
           where TRole : class, IFlexRole<string>, new()
     {
@@ -20,19 +20,19 @@ namespace FlexProviders.Raven
             _session = session;
         }
 
-        public IFlexMembershipUser GetUserByUsername(string username)
+        public TUser GetUserByUsername(string username)
         {
             return _session.Query<TUser>().SingleOrDefault(u => u.Username == username);
         }
 
-        public IFlexMembershipUser Add(IFlexMembershipUser user)
+        public TUser Add(TUser user)
         {
             _session.Store(user);
             _session.SaveChanges();
             return user;
         }
 
-        public IFlexMembershipUser Save(IFlexMembershipUser user)
+        public TUser Save(TUser user)
         {
             var existingUser = _session.Query<TUser>().SingleOrDefault(u => u.Username == user.Username);
             foreach(var property in user.GetType().GetProperties().Where(p => p.CanWrite))
@@ -61,19 +61,19 @@ namespace FlexProviders.Raven
             return false;
         }
 
-        public IFlexMembershipUser GetUserByPasswordResetToken(string passwordResetToken)
+        public TUser GetUserByPasswordResetToken(string passwordResetToken)
         {
             return
                 _session.Query<TUser>().SingleOrDefault(u => u.PasswordResetToken == passwordResetToken);
         }
 
-        public IFlexMembershipUser GetUserByOAuthProvider(string provider, string providerUserId)
+        public TUser GetUserByOAuthProvider(string provider, string providerUserId)
         {
             return
                 _session.Query<TUser>().SingleOrDefault(u => u.OAuthAccounts.Any(r => r.Provider == provider && r.ProviderUserId == providerUserId));
         }
 
-        public IFlexMembershipUser CreateOAuthAccount(string provider, string providerUserId, IFlexMembershipUser user)
+        public TUser CreateOAuthAccount(string provider, string providerUserId, TUser user)
         {
             var account = new FlexOAuthAccount {Provider = provider, ProviderUserId = providerUserId};
             if (user.OAuthAccounts == null)

@@ -8,8 +8,8 @@ using Microsoft.Web.WebPages.OAuth;
 
 namespace FlexProviders.EF
 {
-    public class FlexMembershipUserStore<TUser> 
-        : IFlexUserStore
+    public class FlexMembershipUserStore<TUser> : 
+            IFlexUserStore<TUser>
             where TUser: class, IFlexMembershipUser, new()             
     {
         private readonly DbContext _context;
@@ -19,26 +19,26 @@ namespace FlexProviders.EF
             _context = context;
         }
                     
-        public IFlexMembershipUser GetUserByUsername(string username)
+        public TUser GetUserByUsername(string username)
         {
             return _context.Set<TUser>().SingleOrDefault(u => u.Username == username);
         }
 
-        public IFlexMembershipUser Add(IFlexMembershipUser user)
+        public TUser Add(TUser user)
         {
             _context.Set<TUser>().Add((TUser)user);
             _context.SaveChanges();
             return user;
         }
 
-        public IFlexMembershipUser Save(IFlexMembershipUser user)
+        public TUser Save(TUser user)
         {
             _context.Entry(user).State = EntityState.Modified;
             _context.SaveChanges();
            return user;
         }
 
-        public IFlexMembershipUser CreateOAuthAccount(string provider, string providerUserId, IFlexMembershipUser user)
+        public TUser CreateOAuthAccount(string provider, string providerUserId, TUser user)
         {
             user = _context.Set<TUser>().Single(u => u.Username == user.Username);
             if(user.OAuthAccounts == null)
@@ -50,7 +50,7 @@ namespace FlexProviders.EF
             return user;
         }
 
-        public IFlexMembershipUser GetUserByOAuthProvider(string provider, string providerUserId)
+        public TUser GetUserByOAuthProvider(string provider, string providerUserId)
         {
             var user = _context.Set<TUser>().SingleOrDefault(u => u.OAuthAccounts.Any(a => a.Provider == provider && a.ProviderUserId == providerUserId));
             return user;
@@ -68,7 +68,7 @@ namespace FlexProviders.EF
             return false;
         }
 
-        public IFlexMembershipUser GetUserByPasswordResetToken(string passwordResetToken)
+        public TUser GetUserByPasswordResetToken(string passwordResetToken)
         {
             var user = _context.Set<TUser>().SingleOrDefault(u => u.PasswordResetToken == passwordResetToken);
             return user;

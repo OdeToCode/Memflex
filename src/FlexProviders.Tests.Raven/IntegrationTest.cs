@@ -11,7 +11,7 @@ namespace FlexProviders.Tests.Integration.Raven
 {
     public class IntegrationTest : IDisposable
     {
-        protected readonly FlexMembershipProvider MembershipProvider;
+        protected readonly FlexMembershipProvider<User> MembershipProvider;
         protected readonly FlexRoleProvider RoleProvider;
         protected readonly FakeApplicationEnvironment Environment;
         protected FlexMembershipUserStore<User, Role> UserStore;
@@ -40,7 +40,7 @@ namespace FlexProviders.Tests.Integration.Raven
             UserStore = new FlexMembershipUserStore<User, Role>(Session);
             Environment = new FakeApplicationEnvironment();
             RoleProvider = new FlexRoleProvider(UserStore);
-            MembershipProvider = new FlexMembershipProvider(UserStore, Environment);
+            MembershipProvider = new FlexMembershipProvider<User>(UserStore, Environment);
         }
 
         public void Dispose()
