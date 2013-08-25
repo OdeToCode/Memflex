@@ -15,6 +15,7 @@
     <tags>asp.net membership ravendb</tags>
     <dependencies>
       <dependency id="FlexProviders" version="1.0"/>
+      <dependency id="RavenDB.Client" version="1.0.972"/>
     </dependencies>
   </metadata>
 </package>
