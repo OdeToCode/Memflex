@@ -45,7 +45,7 @@ namespace FlexProviders.Membership
                 return false;
             }
 
-            var decodedWithPadding = MachineKey.Decode(protectedData, MachineKeyProtection.All);
+            var decodedWithPadding = MachineKey.Decode(protectedData, MachineKeyProtection.All);            
 
             if (decodedWithPadding.Length < _padding.Length)
             {

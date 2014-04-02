@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
-using System.Data.Objects.DataClasses;
+using System.Data.Entity.Core.Objects.DataClasses;
 using System.Linq;
 using FlexProviders.Membership;
 using Microsoft.Web.WebPages.OAuth;
