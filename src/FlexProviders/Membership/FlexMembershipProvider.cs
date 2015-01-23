@@ -97,10 +97,18 @@ namespace FlexProviders.Membership
         ///   Updates the account.
         /// </summary>
         /// <param name="user"> The user. </param>
-        public void UpdateAccount(TUser user)
-        {
-            _userStore.Save(user);
-        }
+		public void UpdateAccount(TUser user)
+		{
+			IFlexMembershipUser existingUser = _userStore.GetUserByUsername(user.Username);
+
+			//Check if the username is taken by someone else
+			if (existingUser != null && existingUser != user)
+			{
+				throw new FlexMembershipException("UpdateAccount failed because there is another account with that username.");
+			}
+
+			_userStore.Save(user);
+		}
 
         /// <summary>
         ///   Determines whether the specific <paramref name="username" /> has a
