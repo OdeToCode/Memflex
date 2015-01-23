@@ -50,8 +50,9 @@ namespace FlexProviders.Membership
         /// </summary>
         /// <param name="provider"> The provider. </param>
         /// <param name="providerUserId"> The provider user id. </param>
+		/// <param name="group">The group the user belongs to.</param>
         /// <returns> </returns>
-        bool DisassociateOAuthAccount(string provider, string providerUserId);
+        bool DisassociateOAuthAccount(string provider, string providerUserId, string group = null);
 
         /// <summary>
         ///   Gets the OAuth client data for a provider
@@ -64,7 +65,8 @@ namespace FlexProviders.Membership
         ///   Gets the name of the OAuth accounts for a user.
         /// </summary>
         /// <param name="username"> The username. </param>
+		/// <param name="group">The group the user belongs to.</param>
         /// <returns> </returns>
-        IEnumerable<OAuthAccount> GetOAuthAccountsFromUserName(string username);
+        IEnumerable<OAuthAccount> GetOAuthAccountsFromUserName(string username, string group = null);
     }
 }

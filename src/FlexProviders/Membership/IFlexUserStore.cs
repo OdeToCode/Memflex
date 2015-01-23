@@ -8,9 +8,9 @@ namespace FlexProviders.Membership
         TUser Add(TUser user);        
         TUser Save(TUser user);
         TUser CreateOAuthAccount(string provider, string providerUserId, TUser user);        
-        TUser GetUserByUsername(string username);
+        TUser GetUserByUsername(string username, string group = null);
         TUser GetUserByOAuthProvider(string provider, string providerUserId);        
-        IEnumerable<OAuthAccount> GetOAuthAccountsForUser(string username);
+        IEnumerable<OAuthAccount> GetOAuthAccountsForUser(string username, string group = null);
         bool DeleteOAuthAccount(string provider, string providerUserId);
         TUser GetUserByPasswordResetToken(string passwordResetToken);
     }    

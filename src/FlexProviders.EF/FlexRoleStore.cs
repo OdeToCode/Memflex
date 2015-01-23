@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
+using System.Security.Policy;
 using FlexProviders.Membership;
 using FlexProviders.Roles;
 
@@ -24,35 +25,41 @@ namespace FlexProviders.EF
             _context.SaveChanges();
         }
 
-        public string[] GetRolesForUser(string username)
+        public string[] GetRolesForUser(string username, string group = null)
         {
-            return _context.Set<TRole>().Where(role => role.Users.Any(u => u.Username.Equals(username)))
+            return _context.Set<TRole>().Where(role => role.Users.Any(u => u.Username.Equals(username) && u.Group == group))
                            .Select(role => role.Name).ToArray();
         }
 
-        public string[] GetUsersInRole(string roleName)
+        public string[] GetUsersInRole(string roleName, string group = null)
         {
             return _context.Set<TRole>().Where(role => role.Name.Equals(roleName))
-                .SelectMany(role => role.Users).Select(user => user.Username)
+                .SelectMany(role => role.Users.Where(u => u.Group == group)).Select(user => user.Username)
                            .ToArray();
 
         }
+		public string[] GetAllUsersInRole(string roleName)
+		{
+			return _context.Set<TRole>().Where(role => role.Name.Equals(roleName))
+				.SelectMany(role => role.Users).Select(user => user.Username)
+						   .ToArray();
+		}
 
         public string[] GetAllRoles()
         {
             return _context.Set<TRole>().Select(role => role.Name).ToArray();
         }
 
-        public string[] FindUsersInRole(string roleName, string usernameToMatch)
+        public string[] FindUsersInRole(string roleName, string usernameToMatch, string group = null)
         {
             return _context.Set<TRole>().Where(role => role.Name.Equals(roleName))
-                .SelectMany(role => role.Users).Where(user => user.Username.StartsWith(usernameToMatch)).Select(user => user.Username)
+                .SelectMany(role => role.Users.Where(user => user.Group == group)).Where(user => user.Username.StartsWith(usernameToMatch)).Select(user => user.Username)
                           .ToArray();
         }
 
-        public void RemoveUsersFromRoles(string[] usernames, string[] roleNames)
+        public void RemoveUsersFromRoles(string[] usernames, string[] roleNames, string group = null)
         {
-            var users = _context.Set<TUser>().Where(u => usernames.Contains(u.Username)).ToList();
+            var users = _context.Set<TUser>().Where(u => usernames.Contains(u.Username) && u.Group == group).ToList();
 
             foreach (var roleName in roleNames)
             {
@@ -68,9 +75,9 @@ namespace FlexProviders.EF
             _context.SaveChanges();
         }
 
-        public void AddUsersToRoles(string[] usernames, string[] roleNames)
+        public void AddUsersToRoles(string[] usernames, string[] roleNames, string group = null)
         {
-            var users = _context.Set<TUser>().Where(u => usernames.Contains(u.Username)).ToList();
+            var users = _context.Set<TUser>().Where(u => usernames.Contains(u.Username) && u.Group == group).ToList();
 
             foreach (var roleName in roleNames)
             {

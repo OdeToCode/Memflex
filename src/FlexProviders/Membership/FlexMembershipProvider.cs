@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 using System.Web;
 using DotNetOpenAuth.AspNet;
 using Microsoft.Web.WebPages.OAuth;
@@ -47,12 +48,13 @@ namespace FlexProviders.Membership
         /// <param name="rememberMe">
         /// if set to <c>true</c> [remember me].
         /// </param>
+		/// <param name="group">The group the user belongs to.</param>
         /// <returns>
         /// 
         /// </returns>
-        public bool Login(string username, string password, bool rememberMe = false)
+        public bool Login(string username, string password, bool rememberMe = false, string group = null)
         {
-            IFlexMembershipUser user = _userStore.GetUserByUsername(username);
+            IFlexMembershipUser user = _userStore.GetUserByUsername(username, group);
             if (user == null)
             {
                 return false;
@@ -82,7 +84,7 @@ namespace FlexProviders.Membership
         /// <param name="user"> The user. </param>
         public void CreateAccount(TUser user)
         {
-            IFlexMembershipUser existingUser = _userStore.GetUserByUsername(user.Username);
+            IFlexMembershipUser existingUser = _userStore.GetUserByUsername(user.Username, user.Group);
             if (existingUser != null)
             {
                 throw new FlexMembershipException(FlexMembershipStatus.DuplicateUserName);
@@ -115,16 +117,17 @@ namespace FlexProviders.Membership
         ///   local account
         /// </summary>
         /// <param name="username"> The username. </param>
+		/// <param name="group">The group the user belongs to.</param>
         /// <returns> <c>true</c> if the specified username has a local account; otherwise, <c>false</c> . </returns>
-        public bool HasLocalAccount(string userName)
+        public bool HasLocalAccount(string userName, string group = null)
         {
-            IFlexMembershipUser user = _userStore.GetUserByUsername(userName);
+            IFlexMembershipUser user = _userStore.GetUserByUsername(userName, group);
             return user != null && !String.IsNullOrEmpty(user.Password);
         }
 
-        public bool Exists(string userName)
+        public bool Exists(string userName, string group = null)
         {
-            IFlexMembershipUser user = _userStore.GetUserByUsername(userName);
+            IFlexMembershipUser user = _userStore.GetUserByUsername(userName, group);
             return user != null;
         }
 
@@ -135,9 +138,9 @@ namespace FlexProviders.Membership
         /// <param name="oldPassword"> The old password. </param>
         /// <param name="newPassword"> The new password. </param>
         /// <returns> </returns>
-        public bool ChangePassword(string username, string oldPassword, string newPassword)
+        public bool ChangePassword(string username, string oldPassword, string newPassword, string group = null)
         {
-            TUser user = _userStore.GetUserByUsername(username);
+            TUser user = _userStore.GetUserByUsername(username, group);
             string encodedPassword = _encoder.Encode(oldPassword, user.Salt);
             if (!encodedPassword.Equals(user.Password))
             {
@@ -154,9 +157,9 @@ namespace FlexProviders.Membership
         /// </summary>
         /// <param name="username"> The username. </param>
         /// <param name="newPassword"> The new password. </param>
-        public void SetLocalPassword(string username, string newPassword)
+        public void SetLocalPassword(string username, string newPassword, string group = null)
         {
-            TUser user = _userStore.GetUserByUsername(username);
+            TUser user = _userStore.GetUserByUsername(username, group);
             if (!String.IsNullOrEmpty(user.Password))
             {
                 throw new FlexMembershipException("SetLocalPassword can only be used on accounts that currently don't have a local password.");
@@ -172,10 +175,11 @@ namespace FlexProviders.Membership
         /// </summary>
         /// <param name="username"> The username. </param>
         /// <param name="tokenExpirationInMinutesFromNow"> The token expiration in minutes from now. </param>
+		/// <param name="group">The group the user belongs to.</param>
         /// <returns> </returns>
-        public string GeneratePasswordResetToken(string username, int tokenExpirationInMinutesFromNow = 1440)
+        public string GeneratePasswordResetToken(string username, int tokenExpirationInMinutesFromNow = 1440, string group = null)
         {
-            TUser user = _userStore.GetUserByUsername(username);
+            TUser user = _userStore.GetUserByUsername(username, group);
             if (user == null)
             {
                 throw new FlexMembershipException(FlexMembershipStatus.InvalidUserName);
@@ -225,7 +229,7 @@ namespace FlexProviders.Membership
         /// <param name="user"> The user. </param>
         public void CreateOAuthAccount(string provider, string providerUserId, TUser user)
         {
-            TUser existingUser = _userStore.GetUserByUsername(user.Username);
+            TUser existingUser = _userStore.GetUserByUsername(user.Username, user.Group);
             if (existingUser == null)
             {
                 _userStore.Add(user);
@@ -239,16 +243,16 @@ namespace FlexProviders.Membership
         /// <param name="provider"> The provider. </param>
         /// <param name="providerUserId"> The provider user id. </param>
         /// <returns> </returns>
-        public bool DisassociateOAuthAccount(string provider, string providerUserId)
+        public bool DisassociateOAuthAccount(string provider, string providerUserId, string group = null)
         {
             IFlexMembershipUser user = _userStore.GetUserByOAuthProvider(provider, providerUserId);
             if (user == null)
             {
                 return false;
             }
-            IEnumerable<OAuthAccount> accounts = _userStore.GetOAuthAccountsForUser(user.Username);
+            IEnumerable<OAuthAccount> accounts = _userStore.GetOAuthAccountsForUser(user.Username, group);
 
-            if (HasLocalAccount(user.Username))
+            if (HasLocalAccount(user.Username, group))
                 return _userStore.DeleteOAuthAccount(provider, providerUserId);
 
             if (accounts.Count() > 1)
@@ -282,10 +286,11 @@ namespace FlexProviders.Membership
         ///   Gets the name of the OAuth accounts for a user.
         /// </summary>
         /// <param name="username"> The username. </param>
+		/// <param name="group">The group the user belongs to.</param>
         /// <returns> </returns>
-        public IEnumerable<OAuthAccount> GetOAuthAccountsFromUserName(string username)
+        public IEnumerable<OAuthAccount> GetOAuthAccountsFromUserName(string username, string group = null)
         {
-            return _userStore.GetOAuthAccountsForUser(username);
+            return _userStore.GetOAuthAccountsForUser(username, group);
         }
 
         /// <summary>

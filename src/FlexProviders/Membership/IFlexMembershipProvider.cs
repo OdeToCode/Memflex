@@ -1,3 +1,5 @@
+using System.Text.RegularExpressions;
+
 namespace FlexProviders.Membership
 {
     public interface IFlexMembershipProvider<TUser> where TUser: IFlexMembershipUser
@@ -11,10 +13,11 @@ namespace FlexProviders.Membership
         /// <param name="rememberMe">
         /// if set to <c>true</c> [remember me].
         /// </param>
+		/// <param name="group">The group the user belongs to.</param>
         /// <returns>
         /// 
         /// </returns>
-        bool Login(string username, string password, bool rememberMe = false);
+        bool Login(string username, string password, bool rememberMe = false, string group = null);
 
         /// <summary>
         ///   Logout the current user
@@ -38,15 +41,17 @@ namespace FlexProviders.Membership
         ///   local account
         /// </summary>
         /// <param name="username"> The username. </param>
+		/// <param name="group">The group the user belongs to.</param>
         /// <returns> <c>true</c> if the specified username has a local account; otherwise, <c>false</c> . </returns>
-        bool HasLocalAccount(string username);
+        bool HasLocalAccount(string username, string group = null);
 
         /// <summary>
         ///   Determines if a given username already exists
         /// </summary>
         /// <param name="username"> The username. </param>
+		/// <param name="group">The group the user belongs to.</param>
         /// <returns> <c>true</c> if the specified username exists; otherwise, <c>false</c> . </returns>
-        bool Exists(string username);
+        bool Exists(string username, string group = null);
 
         /// <summary>
         ///   Changes the password for a user
@@ -55,14 +60,14 @@ namespace FlexProviders.Membership
         /// <param name="oldPassword"> The old password. </param>
         /// <param name="newPassword"> The new password. </param>
         /// <returns> </returns>
-        bool ChangePassword(string username, string oldPassword, string newPassword);
+        bool ChangePassword(string username, string oldPassword, string newPassword, string group = null);
 
         /// <summary>
         ///   Sets the local password for a user
         /// </summary>
         /// <param name="username"> The username. </param>
         /// <param name="newPassword"> The new password. </param>
-        void SetLocalPassword(string username, string newPassword);
+        void SetLocalPassword(string username, string newPassword, string group = null);
 
         /// <summary>
         ///   Generates the password reset token for a user
@@ -70,7 +75,7 @@ namespace FlexProviders.Membership
         /// <param name="username"> The username. </param>
         /// <param name="tokenExpirationInMinutesFromNow"> The token expiration in minutes from now. </param>
         /// <returns> </returns>
-        string GeneratePasswordResetToken(string username, int tokenExpirationInMinutesFromNow = 1440);
+        string GeneratePasswordResetToken(string username, int tokenExpirationInMinutesFromNow = 1440, string group = null);
 
         /// <summary>
         ///   Resets the password for the supplied

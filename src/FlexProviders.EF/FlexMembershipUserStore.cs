@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects.DataClasses;
 using System.Linq;
+using System.Text.RegularExpressions;
 using FlexProviders.Membership;
 using Microsoft.Web.WebPages.OAuth;
 
@@ -19,9 +20,9 @@ namespace FlexProviders.EF
             _context = context;
         }
                     
-        public TUser GetUserByUsername(string username)
+        public TUser GetUserByUsername(string username, string group = null)
         {
-            return _context.Set<TUser>().SingleOrDefault(u => u.Username == username);
+            return _context.Set<TUser>().SingleOrDefault(u => u.Username == username && u.Group == group);
         }
 
         public TUser Add(TUser user)
@@ -40,7 +41,7 @@ namespace FlexProviders.EF
 
         public TUser CreateOAuthAccount(string provider, string providerUserId, TUser user)
         {
-            user = _context.Set<TUser>().Single(u => u.Username == user.Username);
+            user = _context.Set<TUser>().Single(u => u.Username == user.Username && u.Group == user.Group);
             if(user.OAuthAccounts == null)
             {
                 user.OAuthAccounts = new EntityCollection<FlexOAuthAccount>();
@@ -74,9 +75,9 @@ namespace FlexProviders.EF
             return user;
         }
 
-        public IEnumerable<OAuthAccount> GetOAuthAccountsForUser(string username)
+        public IEnumerable<OAuthAccount> GetOAuthAccountsForUser(string username, string group = null)
         {
-            var user = _context.Set<TUser>().Single(u => u.Username == username);
+            var user = _context.Set<TUser>().Single(u => u.Username == username && u.Group == group);
             return user.OAuthAccounts.Select(account => new OAuthAccount(account.Provider, account.ProviderUserId));
         }
     }
