@@ -25,6 +25,11 @@ namespace FlexProviders.EF
             return _context.Set<TUser>().SingleOrDefault(u => u.Username == username && u.Group == group);
         }
 
+	    public IEnumerable<TUser> GetAllUsers(string group = null)
+	    {
+			return _context.Set<TUser>().Where(u => u.Group == group).ToList();
+	    }
+
         public TUser Add(TUser user)
         {
             _context.Set<TUser>().Add((TUser)user);
@@ -80,5 +85,30 @@ namespace FlexProviders.EF
             var user = _context.Set<TUser>().Single(u => u.Username == username && u.Group == group);
             return user.OAuthAccounts.Select(account => new OAuthAccount(account.Provider, account.ProviderUserId));
         }
+
+		/// <summary>
+		/// Renames a group by taking all users of the old group and moving them to the new group.
+		/// Will return false if users exist with the new name
+		/// </summary>
+		/// <param name="oldName">The current name you want to change away from.</param>
+		/// <param name="newName">The new group name that all users will be linked to.</param>
+		public bool RenameGroup(string oldName, string newName)
+		{
+			//There are already users with the new group name so we do nothing
+			if (_context.Set<TUser>().Count(u => u.Group == newName) > 0)
+			{
+				return false;
+			}
+
+			var users = _context.Set<TUser>().Where(u => u.Group == oldName);
+
+			foreach (var user in users)
+			{
+				user.Group = newName;
+			}
+			_context.SaveChanges();
+
+			return true;
+		}
     }
 }

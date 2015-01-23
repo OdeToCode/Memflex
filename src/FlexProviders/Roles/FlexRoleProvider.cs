@@ -62,7 +62,7 @@ namespace FlexProviders.Roles
         /// <exception cref="System.Configuration.Provider.ProviderException"></exception>
         public bool DeleteRole(string roleName, bool throwOnPopulatedRole)
         {
-            if(_roleStore.GetUsersInRole(roleName).Any() && throwOnPopulatedRole)
+            if(_roleStore.GetAllUsersInRole(roleName).Any() && throwOnPopulatedRole)
             {
                 throw new ProviderException(String.Format("Try to delete role {0}, but it is populated", roleName));
             }
