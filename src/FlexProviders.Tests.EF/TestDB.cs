@@ -61,7 +61,7 @@ namespace FlexProviders.Tests.Integration.EF
             var userId = _db.Users.FindByUsername(username).Id;
             var roleId = _db.Roles.FindByName(rolename).Id;
 
-            return _db.RoleUsers.FindBy(User_Id: userId, Role_Id: roleId) != null;       
+            return _db.UserRoles.FindBy(User_Id: userId, Role_Id: roleId) != null;       
         }
 
         private readonly dynamic _db;
