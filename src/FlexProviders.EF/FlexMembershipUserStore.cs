@@ -25,6 +25,11 @@ namespace FlexProviders.EF
             return _context.Set<TUser>().SingleOrDefault(u => u.Username == username && u.Group == group);
         }
 
+		public TUser GetUserByEmail(string email, string group = null)
+		{
+			return _context.Set<TUser>().SingleOrDefault(u => u.Email == email && u.Group == group);
+		}
+
 	    public IEnumerable<TUser> GetAllUsers(string group = null)
 	    {
 			return _context.Set<TUser>().Where(u => u.Group == group).ToList();

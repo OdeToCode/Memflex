@@ -84,11 +84,24 @@ namespace FlexProviders.Membership
         /// <param name="user"> The user. </param>
         public void CreateAccount(TUser user)
         {
-            IFlexMembershipUser existingUser = _userStore.GetUserByUsername(user.Username, user.Group);
+			IFlexMembershipUser existingUser = null;
+
+            existingUser = _userStore.GetUserByUsername(user.Username, user.Group);
             if (existingUser != null)
             {
                 throw new FlexMembershipException(FlexMembershipStatus.DuplicateUserName);
             }
+
+			//Email is not required, but if used cannot collide with any other users email (in the group)
+	        if (!string.IsNullOrEmpty(user.Email))
+	        {
+				existingUser = _userStore.GetUserByEmail(user.Email, user.Group);
+				if (existingUser != null)
+				{
+					throw new FlexMembershipException(FlexMembershipStatus.DuplicateEmail);
+				}    
+	        }
+			
 
             user.Salt = user.Salt ?? _encoder.GenerateSalt();
             user.Password = _encoder.Encode(user.Password, user.Salt);
@@ -100,14 +113,25 @@ namespace FlexProviders.Membership
         /// </summary>
         /// <param name="user"> The user. </param>
 		public void UpdateAccount(TUser user)
-		{
-			IFlexMembershipUser existingUser = _userStore.GetUserByUsername(user.Username);
+        {
+	        IFlexMembershipUser existingUser = null;
 
 			//Check if the username is taken by someone else
+			existingUser = _userStore.GetUserByUsername(user.Username);
 			if (existingUser != null && existingUser != user)
 			{
 				throw new FlexMembershipException("UpdateAccount failed because there is another account with that username.");
 			}
+
+			//Email is not required, but if used cannot collide with any other users email (in the group)
+	        if (!string.IsNullOrEmpty(user.Email))
+	        {
+				existingUser = _userStore.GetUserByEmail(user.Email, user.Group);
+				if (existingUser != null && existingUser != user)
+				{
+					throw new FlexMembershipException(FlexMembershipStatus.DuplicateEmail);
+				}
+	        }
 
 			_userStore.Save(user);
 		}
