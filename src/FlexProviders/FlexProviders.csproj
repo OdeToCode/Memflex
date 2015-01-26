@@ -65,10 +65,13 @@
     <Compile Include="Membership\FlexMembershipProvider.cs" />
     <Compile Include="Membership\FlexMembershipStatus.cs" />
     <Compile Include="Membership\FlexOAuthAccount.cs" />
+    <Compile Include="Membership\FlexPrincipal.cs" />
+    <Compile Include="Membership\FlexPrincipalSerializeModel.cs" />
     <Compile Include="Membership\IApplicationEnvironment.cs" />
     <Compile Include="Membership\IFlexMembershipProvider.cs" />
     <Compile Include="Membership\IFlexMembershipUser.cs" />
     <Compile Include="Membership\IFlexOAuthProvider.cs" />
+    <Compile Include="Membership\IFlexPrincipal.cs" />
     <Compile Include="Membership\IFlexUserStore.cs" />
     <Compile Include="Membership\ISecurityEncoder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
