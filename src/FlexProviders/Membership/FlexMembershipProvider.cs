@@ -117,7 +117,7 @@ namespace FlexProviders.Membership
 	        IFlexMembershipUser existingUser = null;
 
 			//Check if the username is taken by someone else
-			existingUser = _userStore.GetUserByUsername(user.Username);
+			existingUser = _userStore.GetUserByUsername(user.Username, user.Group);
 			if (existingUser != null && existingUser != user)
 			{
 				throw new FlexMembershipException("UpdateAccount failed because there is another account with that username.");
