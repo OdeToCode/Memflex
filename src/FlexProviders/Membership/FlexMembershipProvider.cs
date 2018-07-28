@@ -37,24 +37,24 @@ namespace FlexProviders.Membership
             _applicationEnvironment = applicationEnvironment;
         }
 
-        #region IFlexMembershipProvider Members
+		#region IFlexMembershipProvider Members
 
-        /// <summary>
-        /// Determines whether the provided <paramref name="username"/> and
-        /// <paramref name="password"/> combination is valid
-        /// </summary>
-        /// <param name="username">The username.</param>
-        /// <param name="password">The password.</param>
-        /// <param name="rememberMe">
-        /// if set to <c>true</c> [remember me].
-        /// </param>
-		/// <param name="group">The group the user belongs to.</param>
-        /// <returns>
-        /// 
-        /// </returns>
-        public bool Login(string username, string password, bool rememberMe = false, string group = null)
+		/// <summary>
+		/// Determines whether the provided <paramref name="username"/> and
+		/// <paramref name="password"/> combination is valid
+		/// </summary>
+		/// <param name="username">The username.</param>
+		/// <param name="password">The password.</param>
+		/// <param name="rememberMe">
+		/// if set to <c>true</c> [remember me].
+		/// </param>
+		/// <param name="license">The license the user belongs to.</param>
+		/// <returns>
+		/// 
+		/// </returns>
+		public bool Login(string username, string password, bool rememberMe = false, string license = null)
         {
-            IFlexMembershipUser user = _userStore.GetUserByUsername(username, group);
+            IFlexMembershipUser user = _userStore.GetUserByUsername(username, license);
             if (user == null)
             {
                 return false;
@@ -70,10 +70,24 @@ namespace FlexProviders.Membership
             return false;
         }
 
-        /// <summary>
-        ///   Logout the current user
-        /// </summary>
-        public void Logout()
+		public bool LoginSso(string token, bool rememberMe = false)
+		{
+			IFlexMembershipUser user = _userStore.GetUserBySsoToken(token);
+			if (user == null)
+			{
+				return false;
+			}
+
+			//If we found a user for the token we will allow the login
+			_applicationEnvironment.IssueAuthTicket(user.Username, rememberMe);
+			return true;
+			
+		}
+
+		/// <summary>
+		///   Logout the current user
+		/// </summary>
+		public void Logout()
         {
             _applicationEnvironment.RevokeAuthTicket();
         }
@@ -86,16 +100,16 @@ namespace FlexProviders.Membership
         {
 			IFlexMembershipUser existingUser = null;
 
-            existingUser = _userStore.GetUserByUsername(user.Username, user.Group);
+            existingUser = _userStore.GetUserByUsername(user.Username, user.License);
             if (existingUser != null)
             {
                 throw new FlexMembershipException(FlexMembershipStatus.DuplicateUserName);
             }
 
-			//Email is not required, but if used cannot collide with any other users email (in the group)
-	        if (!string.IsNullOrEmpty(user.Email))
+			//Email is not required, but if used cannot collide with any other users email (in the license)
+			if (!string.IsNullOrEmpty(user.Username))
 	        {
-				existingUser = _userStore.GetUserByEmail(user.Email, user.Group);
+				existingUser = _userStore.GetUserByUsername(user.Username, user.License);
 				if (existingUser != null)
 				{
 					throw new FlexMembershipException(FlexMembershipStatus.DuplicateEmail);
@@ -117,16 +131,16 @@ namespace FlexProviders.Membership
 	        IFlexMembershipUser existingUser = null;
 
 			//Check if the username is taken by someone else
-			existingUser = _userStore.GetUserByUsername(user.Username, user.Group);
+			existingUser = _userStore.GetUserByUsername(user.Username, user.License);
 			if (existingUser != null && existingUser != user)
 			{
 				throw new FlexMembershipException("UpdateAccount failed because there is another account with that username.");
 			}
 
-			//Email is not required, but if used cannot collide with any other users email (in the group)
-	        if (!string.IsNullOrEmpty(user.Email))
+			//Email is not required, but if used cannot collide with any other users email (in the license)
+			if (!string.IsNullOrEmpty(user.Username))
 	        {
-				existingUser = _userStore.GetUserByEmail(user.Email, user.Group);
+				existingUser = _userStore.GetUserByUsername(user.Username, user.License);
 				if (existingUser != null && existingUser != user)
 				{
 					throw new FlexMembershipException(FlexMembershipStatus.DuplicateEmail);
@@ -136,22 +150,22 @@ namespace FlexProviders.Membership
 			_userStore.Save(user);
 		}
 
-        /// <summary>
-        ///   Determines whether the specific <paramref name="username" /> has a
-        ///   local account
-        /// </summary>
-        /// <param name="username"> The username. </param>
-		/// <param name="group">The group the user belongs to.</param>
-        /// <returns> <c>true</c> if the specified username has a local account; otherwise, <c>false</c> . </returns>
-        public bool HasLocalAccount(string userName, string group = null)
+		/// <summary>
+		///   Determines whether the specific <paramref name="username" /> has a
+		///   local account
+		/// </summary>
+		/// <param name="username"> The username. </param>
+		/// <param name="license">The license the user belongs to.</param>
+		/// <returns> <c>true</c> if the specified username has a local account; otherwise, <c>false</c> . </returns>
+		public bool HasLocalAccount(string userName, string license = null)
         {
-            IFlexMembershipUser user = _userStore.GetUserByUsername(userName, group);
+            IFlexMembershipUser user = _userStore.GetUserByUsername(userName, license);
             return user != null && !String.IsNullOrEmpty(user.Password);
         }
 
-        public bool Exists(string userName, string group = null)
+        public bool Exists(string userName, string license = null)
         {
-            IFlexMembershipUser user = _userStore.GetUserByUsername(userName, group);
+            IFlexMembershipUser user = _userStore.GetUserByUsername(userName, license);
             return user != null;
         }
 
@@ -162,9 +176,9 @@ namespace FlexProviders.Membership
         /// <param name="oldPassword"> The old password. </param>
         /// <param name="newPassword"> The new password. </param>
         /// <returns> </returns>
-        public bool ChangePassword(string username, string oldPassword, string newPassword, string group = null)
+        public bool ChangePassword(string username, string oldPassword, string newPassword, string license = null)
         {
-            TUser user = _userStore.GetUserByUsername(username, group);
+            TUser user = _userStore.GetUserByUsername(username, license);
             string encodedPassword = _encoder.Encode(oldPassword, user.Salt);
             if (!encodedPassword.Equals(user.Password))
             {
@@ -181,9 +195,9 @@ namespace FlexProviders.Membership
         /// </summary>
         /// <param name="username"> The username. </param>
         /// <param name="newPassword"> The new password. </param>
-        public void SetLocalPassword(string username, string newPassword, string group = null)
+        public void SetLocalPassword(string username, string newPassword, string license = null)
         {
-            TUser user = _userStore.GetUserByUsername(username, group);
+            TUser user = _userStore.GetUserByUsername(username, license);
             if (!String.IsNullOrEmpty(user.Password))
             {
                 throw new FlexMembershipException("SetLocalPassword can only be used on accounts that currently don't have a local password.");
@@ -194,16 +208,16 @@ namespace FlexProviders.Membership
             _userStore.Save(user);
         }
 
-        /// <summary>
-        ///   Generates the password reset token for a user
-        /// </summary>
-        /// <param name="username"> The username. </param>
-        /// <param name="tokenExpirationInMinutesFromNow"> The token expiration in minutes from now. </param>
-		/// <param name="group">The group the user belongs to.</param>
-        /// <returns> </returns>
-        public string GeneratePasswordResetToken(string username, int tokenExpirationInMinutesFromNow = 1440, string group = null)
+		/// <summary>
+		///   Generates the password reset token for a user
+		/// </summary>
+		/// <param name="username"> The username. </param>
+		/// <param name="tokenExpirationInMinutesFromNow"> The token expiration in minutes from now. </param>
+		/// <param name="license">The license the user belongs to.</param>
+		/// <returns> </returns>
+		public string GeneratePasswordResetToken(string username, int tokenExpirationInMinutesFromNow = 1440, string license = null)
         {
-            TUser user = _userStore.GetUserByUsername(username, group);
+            TUser user = _userStore.GetUserByUsername(username, license);
             if (user == null)
             {
                 throw new FlexMembershipException(FlexMembershipStatus.InvalidUserName);
@@ -253,7 +267,7 @@ namespace FlexProviders.Membership
         /// <param name="user"> The user. </param>
         public void CreateOAuthAccount(string provider, string providerUserId, TUser user)
         {
-            TUser existingUser = _userStore.GetUserByUsername(user.Username, user.Group);
+            TUser existingUser = _userStore.GetUserByUsername(user.Username, user.License);
             if (existingUser == null)
             {
                 _userStore.Add(user);
@@ -267,16 +281,16 @@ namespace FlexProviders.Membership
         /// <param name="provider"> The provider. </param>
         /// <param name="providerUserId"> The provider user id. </param>
         /// <returns> </returns>
-        public bool DisassociateOAuthAccount(string provider, string providerUserId, string group = null)
+        public bool DisassociateOAuthAccount(string provider, string providerUserId, string license = null)
         {
             IFlexMembershipUser user = _userStore.GetUserByOAuthProvider(provider, providerUserId);
             if (user == null)
             {
                 return false;
             }
-            IEnumerable<OAuthAccount> accounts = _userStore.GetOAuthAccountsForUser(user.Username, group);
+            IEnumerable<OAuthAccount> accounts = _userStore.GetOAuthAccountsForUser(user.Username, license);
 
-            if (HasLocalAccount(user.Username, group))
+            if (HasLocalAccount(user.Username, license))
                 return _userStore.DeleteOAuthAccount(provider, providerUserId);
 
             if (accounts.Count() > 1)
@@ -306,15 +320,15 @@ namespace FlexProviders.Membership
             get { return _authenticationClients.Values; }
         }
 
-        /// <summary>
-        ///   Gets the name of the OAuth accounts for a user.
-        /// </summary>
-        /// <param name="username"> The username. </param>
-		/// <param name="group">The group the user belongs to.</param>
-        /// <returns> </returns>
-        public IEnumerable<OAuthAccount> GetOAuthAccountsFromUserName(string username, string group = null)
+		/// <summary>
+		///   Gets the name of the OAuth accounts for a user.
+		/// </summary>
+		/// <param name="username"> The username. </param>
+		/// <param name="license">The license the user belongs to.</param>
+		/// <returns> </returns>
+		public IEnumerable<OAuthAccount> GetOAuthAccountsFromUserName(string username, string license = null)
         {
-            return _userStore.GetOAuthAccountsForUser(username, group);
+            return _userStore.GetOAuthAccountsForUser(username, license);
         }
 
         /// <summary>

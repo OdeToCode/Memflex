@@ -8,6 +8,6 @@ namespace FlexProviders.Membership
 {
 	public class FlexPrincipalSerializeModel
 	{
-		public string Group { get; set; }
+		public string License { get; set; }
 	}
 }

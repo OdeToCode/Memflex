@@ -12,6 +12,6 @@ namespace FlexProviders.Membership
 			this.Identity = new GenericIdentity(username);
 		}
 
-		public string Group { get; set; }
+		public string License { get; set; }
 	}
 }
