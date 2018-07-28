@@ -19,10 +19,12 @@ namespace FlexProviders.Membership
 		/// </returns>
 		bool Login(string username, string password, bool rememberMe = false, string license = null);
 
-        /// <summary>
-        ///   Logout the current user
-        /// </summary>
-        void Logout();
+		bool LoginSso(string token, bool rememberMe = false);
+
+		/// <summary>
+		///   Logout the current user
+		/// </summary>
+		void Logout();
 
         /// <summary>
         ///   Creates an account.
