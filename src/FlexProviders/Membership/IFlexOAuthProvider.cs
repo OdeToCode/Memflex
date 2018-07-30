@@ -45,13 +45,14 @@ namespace FlexProviders.Membership
         /// <param name="user"> The user. </param>
         void CreateOAuthAccount(string provider, string providerUserId, TUser user);
 
-        /// <summary>
-        ///   Disassociates the OAuth account for a userid.
-        /// </summary>
-        /// <param name="provider"> The provider. </param>
-        /// <param name="providerUserId"> The provider user id. </param>
-        /// <returns> </returns>
-        bool DisassociateOAuthAccount(string provider, string providerUserId);
+		/// <summary>
+		///   Disassociates the OAuth account for a userid.
+		/// </summary>
+		/// <param name="provider"> The provider. </param>
+		/// <param name="providerUserId"> The provider user id. </param>
+		/// <param name="license">The license the user belongs to.</param>
+		/// <returns> </returns>
+		bool DisassociateOAuthAccount(string provider, string providerUserId, string license = null);
 
         /// <summary>
         ///   Gets the OAuth client data for a provider
@@ -60,11 +61,12 @@ namespace FlexProviders.Membership
         /// <returns> </returns>
         AuthenticationClientData GetOAuthClientData(string provider);
 
-        /// <summary>
-        ///   Gets the name of the OAuth accounts for a user.
-        /// </summary>
-        /// <param name="username"> The username. </param>
-        /// <returns> </returns>
-        IEnumerable<OAuthAccount> GetOAuthAccountsFromUserName(string username);
+		/// <summary>
+		///   Gets the name of the OAuth accounts for a user.
+		/// </summary>
+		/// <param name="username"> The username. </param>
+		/// <param name="license">The license the user belongs to.</param>
+		/// <returns> </returns>
+		IEnumerable<OAuthAccount> GetOAuthAccountsFromUserName(string username, string license = null);
     }
 }

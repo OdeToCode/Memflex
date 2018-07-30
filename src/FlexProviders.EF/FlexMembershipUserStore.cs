@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects.DataClasses;
 using System.Linq;
+using System.Text.RegularExpressions;
 using FlexProviders.Membership;
 using Microsoft.Web.WebPages.OAuth;
 
@@ -19,10 +21,34 @@ namespace FlexProviders.EF
             _context = context;
         }
                     
-        public TUser GetUserByUsername(string username)
+        public TUser GetUserByUsername(string username, string license = null)
         {
-            return _context.Set<TUser>().SingleOrDefault(u => u.Username == username);
+
+			//workaround since it refused to work otherwise.
+			if (license == null)
+			{
+				return _context.Set<TUser>().SingleOrDefault(u => u.Username == username && u.License == null);
+			}
+
+			return _context.Set<TUser>().SingleOrDefault(u => u.Username == username && u.License == license);
         }
+
+		public TUser GetUserBySsoToken(string token)
+		{
+			var utcNow = DateTime.UtcNow;
+			return _context.Set<TUser>().SingleOrDefault(u => u.SsoToken != null && u.SsoToken == token && u.SsoTokenExpiration.HasValue && u.SsoTokenExpiration.Value > utcNow);
+		}
+
+	    public IEnumerable<TUser> GetAllUsers(string license = null)
+	    {
+			//workaround since it refused to work otherwise.
+			if (license == null)
+			{
+				return _context.Set<TUser>().Where(u => u.License == null).ToList();
+			}
+
+			return _context.Set<TUser>().Where(u => u.License == license).ToList();
+	    }
 
         public TUser Add(TUser user)
         {
@@ -40,7 +66,7 @@ namespace FlexProviders.EF
 
         public TUser CreateOAuthAccount(string provider, string providerUserId, TUser user)
         {
-            user = _context.Set<TUser>().Single(u => u.Username == user.Username);
+            user = _context.Set<TUser>().Single(u => u.Username == user.Username && u.License == user.License);
             if(user.OAuthAccounts == null)
             {
                 user.OAuthAccounts = new EntityCollection<FlexOAuthAccount>();
@@ -74,10 +100,35 @@ namespace FlexProviders.EF
             return user;
         }
 
-        public IEnumerable<OAuthAccount> GetOAuthAccountsForUser(string username)
+        public IEnumerable<OAuthAccount> GetOAuthAccountsForUser(string username, string license = null)
         {
-            var user = _context.Set<TUser>().Single(u => u.Username == username);
+            var user = _context.Set<TUser>().Single(u => u.Username == username && u.License == license);
             return user.OAuthAccounts.Select(account => new OAuthAccount(account.Provider, account.ProviderUserId));
         }
+
+		/// <summary>
+		/// Renames a license by taking all users of the old license and moving them to the new license.
+		/// Will return false if users exist with the new name
+		/// </summary>
+		/// <param name="oldName">The current name you want to change away from.</param>
+		/// <param name="newName">The new license name that all users will be linked to.</param>
+		public bool RenameLicense(string oldName, string newName)
+		{
+			//There are already users with the new license name so we do nothing
+			if (_context.Set<TUser>().Count(u => u.License == newName) > 0)
+			{
+				return false;
+			}
+
+			var users = _context.Set<TUser>().Where(u => u.License == oldName);
+
+			foreach (var user in users)
+			{
+				user.License = newName;
+			}
+			_context.SaveChanges();
+
+			return true;
+		}
     }
 }
