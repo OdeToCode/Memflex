@@ -36,7 +36,7 @@ namespace FlexProviders.EF
 		public TUser GetUserBySsoToken(string token)
 		{
 			var utcNow = DateTime.UtcNow;
-			return _context.Set<TUser>().SingleOrDefault(u => u.SsoAccessToken != null && u.SsoAccessToken == token && u.SsoTokenExpiration.HasValue && u.SsoTokenExpiration.Value > utcNow);
+			return _context.Set<TUser>().SingleOrDefault(u => u.SsoToken != null && u.SsoToken == token && u.SsoTokenExpiration.HasValue && u.SsoTokenExpiration.Value > utcNow);
 		}
 
 	    public IEnumerable<TUser> GetAllUsers(string license = null)
