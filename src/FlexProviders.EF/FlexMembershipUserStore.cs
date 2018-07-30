@@ -23,7 +23,14 @@ namespace FlexProviders.EF
                     
         public TUser GetUserByUsername(string username, string license = null)
         {
-            return _context.Set<TUser>().SingleOrDefault(u => u.Username == username && u.License == license);
+
+			//workaround since it refused to work otherwise.
+			if (license == null)
+			{
+				return _context.Set<TUser>().SingleOrDefault(u => u.Username == username && u.License == null);
+			}
+
+			return _context.Set<TUser>().SingleOrDefault(u => u.Username == username && u.License == license);
         }
 
 		public TUser GetUserBySsoToken(string token)
@@ -34,6 +41,12 @@ namespace FlexProviders.EF
 
 	    public IEnumerable<TUser> GetAllUsers(string license = null)
 	    {
+			//workaround since it refused to work otherwise.
+			if (license == null)
+			{
+				return _context.Set<TUser>().Where(u => u.License == null).ToList();
+			}
+
 			return _context.Set<TUser>().Where(u => u.License == license).ToList();
 	    }
 

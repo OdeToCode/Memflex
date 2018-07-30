@@ -10,8 +10,8 @@ namespace FlexProviders.Membership
 		string License { get; set; }
 
 		//Single sign on token
-		string SsoAccessToken { get; }
-		DateTime? SsoTokenExpiration { get; }
+		string SsoAccessToken { get; set; }
+		DateTime? SsoTokenExpiration { get; set; }
 
 		string Username { get; set; }
         string Password { get; set; }

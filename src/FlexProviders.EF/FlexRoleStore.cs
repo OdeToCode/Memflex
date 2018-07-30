@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
@@ -27,13 +28,26 @@ namespace FlexProviders.EF
 
         public string[] GetRolesForUser(string username, string license = null)
         {
+			if(license == null)
+			{
+				return _context.Set<TRole>().Where(role => role.Users.Any(u => u.Username.Equals(username) && u.License == null))
+						   .Select(role => role.Name).ToArray();
+			}
+
             return _context.Set<TRole>().Where(role => role.Users.Any(u => u.Username.Equals(username) && u.License == license))
                            .Select(role => role.Name).ToArray();
         }
 
         public string[] GetUsersInRole(string roleName, string license = null)
         {
-            return _context.Set<TRole>().Where(role => role.Name.Equals(roleName))
+			if (license == null)
+			{
+				return _context.Set<TRole>().Where(role => role.Name.Equals(roleName))
+				.SelectMany(role => role.Users.Where(u => u.License == null)).Select(user => user.Username)
+						   .ToArray();
+			}
+
+			return _context.Set<TRole>().Where(role => role.Name.Equals(roleName))
                 .SelectMany(role => role.Users.Where(u => u.License == license)).Select(user => user.Username)
                            .ToArray();
 
@@ -52,16 +66,32 @@ namespace FlexProviders.EF
 
         public string[] FindUsersInRole(string roleName, string usernameToMatch, string license = null)
         {
-            return _context.Set<TRole>().Where(role => role.Name.Equals(roleName))
+			if (license == null)
+			{
+				return _context.Set<TRole>().Where(role => role.Name.Equals(roleName))
+				.SelectMany(role => role.Users.Where(user => user.License == null)).Where(user => user.Username.StartsWith(usernameToMatch)).Select(user => user.Username)
+						  .ToArray();
+			}
+
+			return _context.Set<TRole>().Where(role => role.Name.Equals(roleName))
                 .SelectMany(role => role.Users.Where(user => user.License == license)).Where(user => user.Username.StartsWith(usernameToMatch)).Select(user => user.Username)
                           .ToArray();
         }
 
         public void RemoveUsersFromRoles(string[] usernames, string[] roleNames, string license = null)
         {
-            var users = _context.Set<TUser>().Where(u => usernames.Contains(u.Username) && u.License == license).ToList();
+			List<TUser> users = null;
 
-            foreach (var roleName in roleNames)
+			if (license == null)
+			{
+				users = _context.Set<TUser>().Where(u => usernames.Contains(u.Username) && u.License == null).ToList();
+			}
+			else
+			{
+				users = _context.Set<TUser>().Where(u => usernames.Contains(u.Username) && u.License == license).ToList();
+			}
+
+			foreach (var roleName in roleNames)
             {
                 var role = _context.Set<TRole>().Include(r=>r.Users).SingleOrDefault(r => r.Name == roleName);
                 if (role != null)
@@ -77,9 +107,18 @@ namespace FlexProviders.EF
 
         public void AddUsersToRoles(string[] usernames, string[] roleNames, string license = null)
         {
-            var users = _context.Set<TUser>().Where(u => usernames.Contains(u.Username) && u.License == license).ToList();
+			List<TUser> users = null;
 
-            foreach (var roleName in roleNames)
+			if (license == null)
+			{
+				users = _context.Set<TUser>().Where(u => usernames.Contains(u.Username) && u.License == null).ToList();
+			}
+			else
+			{
+				users = _context.Set<TUser>().Where(u => usernames.Contains(u.Username) && u.License == license).ToList();
+			}
+
+			foreach (var roleName in roleNames)
             {
                 var role = _context.Set<TRole>().SingleOrDefault(r => r.Name == roleName);
                 if (role != null)
