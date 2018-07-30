@@ -12,8 +12,10 @@ namespace FlexProviders.Tests.Integration.EF
         }
 
         public int Id { get; set; }
+		public string Group { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
+		public string Email { get; set; }
         public string Salt { get; set; }
         public string PasswordResetToken { get; set; }
         public DateTime PasswordResetTokenExpiration { get; set; }
@@ -21,5 +23,8 @@ namespace FlexProviders.Tests.Integration.EF
         public int FavoriteNumber { get; set; }
         public virtual ICollection<FlexOAuthAccount> OAuthAccounts { get; set; }
         public ICollection<Role> Roles { get; set; }
+        public string License { get; set; }
+        public string SsoToken { get; set; }
+        public DateTime? SsoTokenExpiration { get; set; }
     }
 }

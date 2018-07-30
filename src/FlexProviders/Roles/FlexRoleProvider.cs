@@ -17,29 +17,31 @@ namespace FlexProviders.Roles
             _roleStore = roleStore;
         }
 
-        /// <summary>
-        /// Determines whether the specified <paramref name="username" /> is in
-        /// the specified <paramref name="roleName" />.
-        /// </summary>
-        /// <param name="username">The username.</param>
-        /// <param name="roleName">Name of the role.</param>
-        /// <returns>
-        /// <c>true</c> if the username is specified role;
-        /// otherwise, <c>false</c> .
-        /// </returns>
-        public bool IsUserInRole(string username, string roleName)
+		/// <summary>
+		/// Determines whether the specified <paramref name="username" /> is in
+		/// the specified <paramref name="roleName" />.
+		/// </summary>
+		/// <param name="username">The username.</param>
+		/// <param name="roleName">Name of the role.</param>
+		/// <param name="license">The license the user belongs to.</param>
+		/// <returns>
+		/// <c>true</c> if the username is specified role;
+		/// otherwise, <c>false</c> .
+		/// </returns>
+		public bool IsUserInRole(string username, string roleName, string license = null)
         {
-            return GetUsersInRole(roleName).Any(user => user.Equals(username, StringComparison.OrdinalIgnoreCase));
+            return GetUsersInRole(roleName, license).Any(user => user.Equals(username, StringComparison.OrdinalIgnoreCase));
         }
 
-        /// <summary>
-        /// Gets the roles for user.
-        /// </summary>
-        /// <param name="username">The username.</param>
-        /// <returns></returns>
-        public string[] GetRolesForUser(string username)
+		/// <summary>
+		/// Gets the roles for user.
+		/// </summary>
+		/// <param name="username">The username.</param>
+		/// <param name="license">The license the user belongs to.</param>
+		/// <returns></returns>
+		public string[] GetRolesForUser(string username, string license = null)
         {
-            return _roleStore.GetRolesForUser(username);
+            return _roleStore.GetRolesForUser(username, license);
         }
 
         /// <summary>
@@ -60,7 +62,7 @@ namespace FlexProviders.Roles
         /// <exception cref="System.Configuration.Provider.ProviderException"></exception>
         public bool DeleteRole(string roleName, bool throwOnPopulatedRole)
         {
-            if(_roleStore.GetUsersInRole(roleName).Any() && throwOnPopulatedRole)
+            if(_roleStore.GetAllUsersInRole(roleName).Any() && throwOnPopulatedRole)
             {
                 throw new ProviderException(String.Format("Try to delete role {0}, but it is populated", roleName));
             }
@@ -78,37 +80,52 @@ namespace FlexProviders.Roles
         }
 
 
-        /// <summary>
-        /// Adds the users to roles.
-        /// </summary>
-        /// <param name="usernames">The usernames to add the to the roles.</param>
-        /// <param name="roleNames">The role names to add the users to.</param>
-        public void AddUsersToRoles(string[] usernames, string[] roleNames)
+		/// <summary>
+		/// Adds the users to roles.
+		/// </summary>
+		/// <param name="usernames">The usernames to add the to the roles.</param>
+		/// <param name="roleNames">The role names to add the users to.</param>
+		/// <param name="license">The license the users belong to.</param>
+		public void AddUsersToRoles(string[] usernames, string[] roleNames, string license = null)
         {
-            _roleStore.AddUsersToRoles(usernames, roleNames);
+            _roleStore.AddUsersToRoles(usernames, roleNames, license);
         }
 
-        /// <summary>
-        /// Removes the users from roles.
-        /// </summary>
-        /// <param name="usernames">The usernames.</param>
-        /// <param name="roleNames">The role names.</param>
-        public void RemoveUsersFromRoles(string[] usernames, string[] roleNames)
+		/// <summary>
+		/// Removes the users from roles.
+		/// </summary>
+		/// <param name="usernames">The usernames.</param>
+		/// <param name="roleNames">The role names.</param>
+		/// <param name="license">The license the users belong to.</param>
+		public void RemoveUsersFromRoles(string[] usernames, string[] roleNames, string license = null)
         {
-            _roleStore.RemoveUsersFromRoles(usernames, roleNames);
+            _roleStore.RemoveUsersFromRoles(usernames, roleNames, license);
         }
 
-        /// <summary>
-        /// Gets the users in role.
-        /// </summary>
-        /// <param name="roleName">Name of the role.</param>
-        /// <returns>
-        /// 
-        /// </returns>
-        public string[] GetUsersInRole(string roleName)
+		/// <summary>
+		/// Gets the users in role.
+		/// </summary>
+		/// <param name="roleName">Name of the role.</param>
+		/// <param name="license">The license the users belong to.</param>
+		/// <returns>
+		/// 
+		/// </returns>
+		public string[] GetUsersInRole(string roleName, string license = null)
         {
-            return _roleStore.GetUsersInRole(roleName);
+            return _roleStore.GetUsersInRole(roleName, license);
         }
+
+		/// <summary>
+		/// Gets the all users in role.
+		/// </summary>
+		/// <param name="roleName">Name of the role.</param>
+		/// <returns>
+		/// 
+		/// </returns>
+		public string[] GetAllUsersInRole(string roleName)
+		{
+			return _roleStore.GetAllUsersInRole(roleName);
+		}
 
         /// <summary>
         /// Gets all roles.
